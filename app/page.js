@@ -1,4 +1,22 @@
 import collection from "../collection.config.js";
+import EntryCard from "../components/EntryCard.js";
+
+const entries = [
+  {
+    title: "Meditating Buddha — ព្រះពុទ្ធសាមាឧ",
+    description: "A seated Buddha from the Angkor period, cross-legged in deep meditation with a serene expression.",
+    location: "Angkor, Cambodia",
+    material: "Sandstone",
+    era: "12th century",
+  },
+  {
+    title: "Apsara Dancer — អប្សរា",
+    description: "An apsara relief carved into temple stone, mid-dance with flowing robes and graceful gestures.",
+    location: "Phnom Penh",
+    material: "Limestone",
+    era: "13th century",
+  },
+];
 
 const styles = {
   wrap: {
@@ -72,7 +90,11 @@ export default function Home() {
         <p style={styles.cardValue}>{collection.source}</p>
       </div>
 
-      <p style={styles.count}>entries in the archive: 0 (for now)</p>
+      <p style={styles.count}>entries in the archive: {entries.length} (for now)</p>
+
+      {entries.map((entry) => (
+        <EntryCard key={entry.title} entry={entry} />
+      ))}
 
       <footer style={styles.footer}>
         Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall
