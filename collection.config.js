@@ -11,13 +11,13 @@ const collection = {
   name: "Khmer Stone Sculpture Archive",
 
   // One sentence: what is this archive, and why does it matter?
-  description: "A living archive of traditional Khmer stone carving techniques, tools, and motifs, built for ICT 340 as the craft faces pressure from machine-made replicas.A living archive of a piece of Khmer culture, built for ICT 340.",
+  description: "A living archive of traditional Khmer stone carving techniques, tools, and motifs, built for ICT 340 as the craft faces pressure from machine-made replicas.",
 
   // Who is building this archive? Your name, as you want it shown.
   curator: "Buntha Soth",
 
   // Where does your knowledge come from? A person, a place, a community.
-  source: "Published craft research on Cambodian stone carving, with museum fieldwork to follown",
+  source: "Published craft research on Cambodian stone carving, with museum fieldwork to follow",
 };
 
 export default collection;
