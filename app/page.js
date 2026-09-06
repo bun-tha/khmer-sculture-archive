@@ -1,3 +1,6 @@
+   "use client";
+
+   import { useState } from "react";
    import collection from "../collection.config.js";
    import EntryCard from "../components/EntryCard.js";
    import { entries } from "../data/entries.js";
@@ -58,8 +61,18 @@ const styles = {
     color: "#5A6373",
   },
 };
-
+function filterEntries(entries, query) {
+  const q = query.toLowerCase();
+  return entries.filter(
+    (entry) =>
+      entry.title.toLowerCase().includes(q) ||
+      entry.description.toLowerCase().includes(q)
+  );
+}
 export default function Home() {
+   const [query, setQuery] = useState("");
+  const visibleEntries = filterEntries(entries, query);
+
   return (
     <main style={styles.wrap}>
       <p style={styles.kicker}>KHMER LIVING ARCHIVE</p>
@@ -75,11 +88,36 @@ export default function Home() {
         <p style={styles.cardValue}>{collection.source}</p>
       </div>
 
-      <p style={styles.count}>entries in the archive: {entries.length} (for now)</p>
+      <input
+  type="text"
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+  placeholder="Search the archive..."
+  style={{
+    width: "100%",
+    marginTop: 48,
+    padding: "12px 16px",
+    fontSize: 16,
+    backgroundColor: "#1C222C",
+    border: "1px solid #2E3644",
+    borderRadius: 8,
+    color: "#E8ECF1",
+  }}
+/>
 
-      {entries.map((entry) => (
-        <EntryCard key={entry.title} entry={entry} />
-      ))}
+<p style={styles.count}>
+  showing {visibleEntries.length} of {entries.length} entries
+</p>
+
+     {visibleEntries.length === 0 ? (
+  <p style={styles.description}>
+    Nothing carved from that search yet — try a shorter word, or clear the box to see everything.
+  </p>
+) : (
+  visibleEntries.map((entry) => (
+    <EntryCard key={entry.title} entry={entry} />
+  ))
+)}
 
       <footer style={styles.footer}>
         Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall
