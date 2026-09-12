@@ -1,26 +1,53 @@
 const styles = {
   card: {
-    padding: 24,
-    backgroundColor: "#1C222C",
-    border: "1px solid #2E3644",
-    borderRadius: 10,
+    padding: "14px 0",
+    borderBottom: "0.5px solid #DDDDDA",
+  },
+  row: {
+    display: "flex",
+    gap: 14,
+  },
+  number: {
+    fontFamily: "Georgia, 'Iowan Old Style', serif",
+    fontSize: 13,
+    color: "#5B7CAD",
+    minWidth: 20,
+  },
+  imageWrap: {
+    flexShrink: 0,
+    width: 120,
+  },
+  image: {
+    width: "100%",
+    display: "block",
+    borderRadius: 6,
+  },
+  content: {
+    flex: 1,
+    minWidth: 0,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 700,
-    margin: 0,
+    fontFamily: "Georgia, 'Iowan Old Style', serif",
+    fontSize: 17,
+    fontWeight: 500,
+    color: "#242426",
+    margin: "0 0 6px",
+  },
+  titleKhmer: {
+    fontSize: 14,
+    color: "#7C8894",
+    margin: "-2px 0 6px",
   },
   description: {
     fontSize: 14,
-    color: "#97A1B3",
+    color: "#6B6B68",
     lineHeight: 1.6,
-    margin: "12px 0 0",
+    margin: "0 0 8px",
   },
   meta: {
-    fontFamily: "'Courier New', monospace",
     fontSize: 12,
-    color: "#97A1B3",
-    marginTop: 16,
+    color: "#7C8894",
+    margin: 0,
   },
 };
 
@@ -33,15 +60,16 @@ export default function EntryCard({ entry, index }) {
     <article style={styles.card}>
       <div style={styles.row}>
         <span style={styles.number}>{String(index + 1).padStart(2, "0")}</span>
-        <div>
-          {entry.image && (
-            <img
-              src={entry.image}
-              alt={entry.title}
-              style={{ width: "100%", maxWidth: 240, borderRadius: 6, marginBottom: 10, display: "block" }}
-            />
-          )}
+        {entry.image && (
+          <div style={styles.imageWrap}>
+            <img src={entry.image} alt={entry.title} style={styles.image} />
+          </div>
+        )}
+        <div style={styles.content}>
           <h3 style={styles.title}>{entry.title}</h3>
+          {entry.titleKhmer && (
+            <p style={styles.titleKhmer}>{entry.titleKhmer}</p>
+          )}
           <p style={styles.description}>{entry.description}</p>
           <p style={styles.meta}>{meta}</p>
         </div>

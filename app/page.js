@@ -114,9 +114,9 @@ export default function Home() {
     Nothing carved from that search yet — try a shorter word, or clear the box to see everything.
   </p>
 ) : (
-  visibleEntries.map((entry) => (
-    <EntryCard key={entry.title} entry={entry} />
-  ))
+  visibleEntries.map((entry, i) => (
+  <EntryCard key={entry.title} entry={entry} index={i} />
+))
 )}
 
       <footer style={styles.footer}>
