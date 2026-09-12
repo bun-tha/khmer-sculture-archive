@@ -24,16 +24,28 @@ const styles = {
   },
 };
 
-export default function EntryCard({ entry }) {
+export default function EntryCard({ entry, index }) {
   const meta = [entry.location, entry.material, entry.era]
     .filter(Boolean)
     .join(" · ");
 
   return (
     <article style={styles.card}>
-      <h3 style={styles.title}>{entry.title}</h3>
-      <p style={styles.description}>{entry.description}</p>
-      <p style={styles.meta}>{meta}</p>
+      <div style={styles.row}>
+        <span style={styles.number}>{String(index + 1).padStart(2, "0")}</span>
+        <div>
+          {entry.image && (
+            <img
+              src={entry.image}
+              alt={entry.title}
+              style={{ width: "100%", maxWidth: 240, borderRadius: 6, marginBottom: 10, display: "block" }}
+            />
+          )}
+          <h3 style={styles.title}>{entry.title}</h3>
+          <p style={styles.description}>{entry.description}</p>
+          <p style={styles.meta}>{meta}</p>
+        </div>
+      </div>
     </article>
   );
 }

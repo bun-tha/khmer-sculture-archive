@@ -8,6 +8,7 @@ export const entries = [
     era: "First half of the 7th century",
     location: "Koh Krieng, Sambor, Kratie province — National Museum of Cambodia",
     inventoryNo: "Ka.1621",
+    image: "/images/Ka.1621.png",
   },
   {
     id: "2",
@@ -18,6 +19,7 @@ export const entries = [
     era: "Late 12th to early 13th century",
     location: "Krol Romeas, Angkor Thom, Siem Reap — National Museum of Cambodia",
     inventoryNo: "Ka.1703",
+    image: "/images/Ka.1703.png",
   },
   {
     id: "3",
@@ -28,6 +30,7 @@ export const entries = [
     era: "Third quarter of the 10th century",
     location: "Sralao Temple, Siem Reap — National Museum of Cambodia",
     inventoryNo: "Ka.1819",
+    image: "/images/Ka.1819.png",
   },
   {
     id: "4",
@@ -38,6 +41,7 @@ export const entries = [
     era: "6th century",
     location: "Tuol Dai Buon, Prey Veng province — National Museum of Cambodia",
     inventoryNo: "Ka.1597",
+    image: "/images/Ka.1597.png",
   },
   {
     id: "5",
@@ -48,6 +52,7 @@ export const entries = [
     era: "Pre-Angkor period, Prei Khmeng style, mid-7th century",
     location: "Prasat Andet, Staung District, Kampong Thom province — National Museum of Cambodia",
     inventoryNo: "Ka.1635",
+    image: "/images/Ka.1635.png",
   },
   {
     id: "6",
@@ -58,6 +63,7 @@ export const entries = [
     era: "Pre-Angkor period, Phnom Da style, 6th century",
     location: "Phnom Da, Angkor Borei District, Takeo province — National Museum of Cambodia",
     inventoryNo: "Ka.1639",
+    image: "/images/Ka.1639.png",
   },
   {
     id: "7",
@@ -67,6 +73,7 @@ export const entries = [
     era: "Angkor period, Baphuon style, 11th century",
     location: "Preah Pithou, Siem Reap province — National Museum of Cambodia",
     inventoryNo: "Ka.1687",
+    image: "/images/Ka.1687.png",
   },
   {
     id: "8",
@@ -76,6 +83,7 @@ export const entries = [
     era: "Angkor period",
     location: "Angkor Thom, Siem Reap province — National Museum of Cambodia",
     inventoryNo: "Ka.1751",
+    image: "/images/Ka.1751.png",
   },
   {
     id: "9",
@@ -86,6 +94,7 @@ export const entries = [
     era: "Modern period, 20th century",
     location: "Wat Hanchey, Kampong Cham province — National Museum of Cambodia",
     inventoryNo: "Ka.3162",
+    image: "/images/Ka.3162.png",
   },
   {
     id: "10",
@@ -96,5 +105,6 @@ export const entries = [
     era: "Pre-Angkor period, Sambor Prei Kuk style, 7th century",
     location: "Sambor Prei Kuk, Kampong Thom province — Kompong Thom Provincial Museum",
     inventoryNo: "MKGT.10",
+    image: "/images/MKGT.10.png",
   },
 ];
