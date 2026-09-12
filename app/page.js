@@ -14,7 +14,7 @@ const styles = {
   },
   kicker: {
     fontFamily: "'Courier New', monospace",
-    color: "#2EE6A8",
+    color: "#5B7CAD",
     fontSize: 14,
     letterSpacing: 1,
   },
@@ -26,21 +26,21 @@ const styles = {
   },
   description: {
     fontSize: 18,
-    color: "#97A1B3",
+    color: "#6B6B68",
     lineHeight: 1.6,
     margin: 0,
   },
   card: {
     marginTop: 48,
     padding: 24,
-    backgroundColor: "#1C222C",
-    border: "1px solid #2E3644",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #DDDDDA",
     borderRadius: 10,
   },
   cardLabel: {
     fontFamily: "'Courier New', monospace",
     fontSize: 12,
-    color: "#97A1B3",
+    color: "#5B7CAD",
     margin: 0,
   },
   cardValue: {
@@ -50,15 +50,15 @@ const styles = {
   count: {
     fontFamily: "'Courier New', monospace",
     fontSize: 14,
-    color: "#2EE6A8",
+    color: "#5B7CAD",
     marginTop: 48,
   },
   footer: {
     marginTop: 64,
     paddingTop: 24,
-    borderTop: "1px solid #2E3644",
+    borderTop: "1px solid #DDDDDA",
     fontSize: 13,
-    color: "#5A6373",
+    color: "#6B6B68",
   },
 };
 function filterEntries(entries, query) {
@@ -99,10 +99,10 @@ export default function Home() {
     marginTop: 48,
     padding: "12px 16px",
     fontSize: 16,
-    backgroundColor: "#1C222C",
-    border: "1px solid #2E3644",
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #DDDDDA",
     borderRadius: 8,
-    color: "#E8ECF1",
+    color: "#242426",
   }}
 />
 
