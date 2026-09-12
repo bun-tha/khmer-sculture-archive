@@ -66,7 +66,8 @@ function filterEntries(entries, query) {
   return entries.filter(
     (entry) =>
       entry.title.toLowerCase().includes(q) ||
-      entry.description.toLowerCase().includes(q)
+      entry.description.toLowerCase().includes(q) ||
+      (entry.titleKhmer && entry.titleKhmer.includes(q))
   );
 }
 export default function Home() {
