@@ -17,7 +17,7 @@ const collection = {
   curator: "Buntha Soth",
 
   // Where does your knowledge come from? A person, a place, a community.
-  source: "Published craft research on Cambodian stone carving, with museum fieldwork to follow",
+  source: "National Museum of Cambodia and Kompong Thom Provincial Museum catalog records",
 };
 
 export default collection;
