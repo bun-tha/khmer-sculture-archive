@@ -22,8 +22,13 @@ export async function createClient() {
             cookieStore.setAll(cookiesToSet);
           } catch {
             // `cookieStore.setAll` only exists in Next.js 15.11.0+. On this
-            // project's Next.js version the root middleware.js picks up the
-            // cookie updates and writes them onto the response instead.
+            // project's Next.js version the cookie store still exposes `set`,
+            // so write each updated auth cookie individually. Without this
+            // fallback, Server Actions (login, signup, logout) would never
+            // persist session cookies.
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
           }
         },
       },
