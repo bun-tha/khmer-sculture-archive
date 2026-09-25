@@ -1,10 +1,9 @@
    "use client";
 
-   import { useState } from "react";
-   import collection from "../collection.config.js";
-   import EntryCard from "../components/EntryCard.js";
-   import { entries } from "../data/entries.js";
-
+import { useState, useEffect } from "react";
+import collection from "../collection.config.js";
+import EntryCard from "../components/EntryCard.js";
+import { createClient } from "../utils/supabase/client.js";
 
 const styles = {
   wrap: {
@@ -70,8 +69,45 @@ function filterEntries(entries, query) {
       (entry.titleKhmer && entry.titleKhmer.includes(q))
   );
 }
+// Map Supabase columns to the shapes EntryCard and the search expect.
+function mapRow(row) {
+  return {
+    ...row,
+    titleKhmer: row.title_km,
+    era: row.period,
+    image: row.photo_url,
+  };
+}
 export default function Home() {
-   const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
+  // status is "loading" while the first fetch is in flight, "error" if it
+  // failed, and "ready" once the entries have arrived from Supabase.
+  const [status, setStatus] = useState("loading");
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const supabase = createClient();
+
+    supabase
+      .from("entries")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          setStatus("error");
+          return;
+        }
+        setEntries((data ?? []).map(mapRow));
+        setStatus("ready");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const visibleEntries = filterEntries(entries, query);
 
   return (
@@ -90,35 +126,45 @@ export default function Home() {
       </div>
 
       <input
-  type="text"
-  value={query}
-  onChange={(e) => setQuery(e.target.value)}
-  placeholder="Search the archive..."
-  style={{
-    width: "100%",
-    marginTop: 48,
-    padding: "12px 16px",
-    fontSize: 16,
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
-    borderRadius: 8,
-    color: "#242426",
-  }}
-/>
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search the archive..."
+        style={{
+          width: "100%",
+          marginTop: 48,
+          padding: "12px 16px",
+          fontSize: 16,
+          backgroundColor: "#FFFFFF",
+          border: "1px solid #DDDDDA",
+          borderRadius: 8,
+          color: "#242426",
+        }}
+      />
 
-<p style={styles.count}>
-  showing {visibleEntries.length} of {entries.length} entries
-</p>
-
-     {visibleEntries.length === 0 ? (
-  <p style={styles.description}>
-    Nothing carved from that search yet — try a shorter word, or clear the box to see everything.
-  </p>
-) : (
-  visibleEntries.map((entry, i) => (
-  <EntryCard key={entry.title} entry={entry} index={i} />
-))
-)}
+      {status === "loading" ? (
+        <p style={styles.count}>Loading the archive…</p>
+      ) : status === "error" ? (
+        <p style={styles.description}>
+          The archive is unreachable right now — try again in a moment.
+        </p>
+      ) : (
+        <>
+          <p style={styles.count}>
+            showing {visibleEntries.length} of {entries.length} entries
+          </p>
+          {visibleEntries.length === 0 ? (
+            <p style={styles.description}>
+              Nothing carved from that search yet — try a shorter word, or
+              clear the box to see everything.
+            </p>
+          ) : (
+            visibleEntries.map((entry, i) => (
+              <EntryCard key={entry.id} entry={entry} index={i} />
+            ))
+          )}
+        </>
+      )}
 
       <footer style={styles.footer}>
         Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall
