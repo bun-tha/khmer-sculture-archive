@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import EntryCard from "../../../components/EntryCard.js";
+import EntryActions from "../../../components/EntryActions.js";
 import { createClient } from "../../../utils/supabase/server.js";
 
 const styles = {
@@ -46,6 +47,12 @@ export default async function EntryPage({ params }) {
     notFound();
   }
 
+  // Edit and Delete are shown only to the logged-in owner of the entry.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const canEdit = user !== null && entry.owner === user.id;
+
   return (
     <main style={styles.wrap}>
       <p style={styles.kicker}>KHMER LIVING ARCHIVE</p>
@@ -53,6 +60,7 @@ export default async function EntryPage({ params }) {
         ← Back to the archive
       </a>
       <EntryCard entry={mapRow(entry)} index={0} />
+      {canEdit && <EntryActions id={entry.id} />}
     </main>
   );
 }

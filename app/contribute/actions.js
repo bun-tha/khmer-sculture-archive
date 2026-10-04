@@ -43,6 +43,38 @@ async function checkPhotoContent(photo) {
   return { ext: spec.ext };
 }
 
+// Trim every text field and validate the lengths. Shared by create and update
+// so the two forms behave identically.
+function trimmedFields(formData) {
+  const values = {};
+  for (const rule of FIELD_RULES) {
+    values[rule.name] = trimText(formData, rule.name);
+  }
+  return { values, fieldErrors: validateTexts(values) };
+}
+
+// Uploads a photo to <user id>/<random uuid>.<ext> in the photos bucket and
+// returns its public URL. The filename is generated, never taken from the
+// user's original filename.
+async function uploadPhoto(supabase, userId, photo) {
+  const checked = await checkPhotoContent(photo);
+  if (checked.error) {
+    return { error: checked.error };
+  }
+  const photoPath = `${userId}/${crypto.randomUUID()}.${checked.ext}`;
+  const { error: uploadError } = await supabase.storage
+    .from("photos")
+    .upload(photoPath, photo, { contentType: photo.type });
+  if (uploadError) {
+    console.error("contribute: photo upload failed:", uploadError);
+    return { error: "Your photo could not be uploaded — please try again." };
+  }
+  const { data: urlData } = supabase.storage
+    .from("photos")
+    .getPublicUrl(photoPath);
+  return { photoPath, photoUrl: urlData.publicUrl };
+}
+
 export async function submitEntry(prevState, formData) {
   const supabase = await createClient();
 
@@ -56,24 +88,22 @@ export async function submitEntry(prevState, formData) {
 
   // Trim every text field, then re-validate on the server (never trust the
   // client's checks alone).
-  const values = {};
-  for (const rule of FIELD_RULES) {
-    values[rule.name] = trimText(formData, rule.name);
-  }
-  const fieldErrors = validateTexts(values);
+  const { values, fieldErrors } = trimmedFields(formData);
 
   const photo = formData.get("photo");
-  let photoExt = null;
+  let photoUrl = null;
+  let photoPath = null;
   if (!photo || photo.size === 0) {
     fieldErrors.photo = "Choose a photo (jpeg, png, or webp, max 4 MB).";
   } else if (photo.size > MAX_PHOTO_BYTES) {
     fieldErrors.photo = "Photo must be 4 MB or smaller.";
   } else {
-    const checked = await checkPhotoContent(photo);
-    if (checked.error) {
-      fieldErrors.photo = checked.error;
+    const uploaded = await uploadPhoto(supabase, user.id, photo);
+    if (uploaded.error) {
+      fieldErrors.photo = uploaded.error;
     } else {
-      photoExt = checked.ext;
+      photoUrl = uploaded.photoUrl;
+      photoPath = uploaded.photoPath;
     }
   }
 
@@ -81,40 +111,11 @@ export async function submitEntry(prevState, formData) {
     return { fieldErrors };
   }
 
-  // Photon path is <user id>/<random uuid>.<ext> in the photos bucket — a
-  // generated name per user, so no one can be served or overwrite a file
-  // they should not touch.
-  const photoPath = `${user.id}/${crypto.randomUUID()}.${photoExt}`;
-  const { error: uploadError } = await supabase.storage
-    .from("photos")
-    .upload(photoPath, photo, { contentType: photo.type });
-
-  if (uploadError) {
-    console.error("contribute: photo upload failed:", uploadError);
-    return {
-      formError: "Your photo could not be uploaded — please try again.",
-    };
-  }
-
-  const { data: urlData } = supabase.storage
-    .from("photos")
-    .getPublicUrl(photoPath);
-
   // Insert only the entry fields, owner, and photo_url; id and created_at
   // get their defaults from the table.
   const { data: inserted, error: insertError } = await supabase
     .from("entries")
-    .insert({
-      title: values.title,
-      title_km: values.title_km,
-      description: values.description,
-      location: values.location,
-      source: values.source,
-      material: values.material,
-      period: values.period,
-      owner: user.id,
-      photo_url: urlData.publicUrl,
-    })
+    .insert({ ...values, owner: user.id, photo_url: photoUrl })
     .select("id")
     .single();
 
@@ -122,12 +123,124 @@ export async function submitEntry(prevState, formData) {
     console.error("contribute: entry insert failed:", insertError);
     // The photo was already uploaded; remove the orphan object so the bucket
     // does not fill up with unused files. Best effort only.
-    await supabase.storage
-      .from("photos")
-      .remove([photoPath])
-      .catch(() => {});
+    if (photoPath) {
+      await supabase.storage
+        .from("photos")
+        .remove([photoPath])
+        .catch(() => {});
+    }
     return { formError: "Your entry could not be saved — please try again." };
   }
 
   redirect(`/entries/${inserted.id}`);
+}
+
+export async function updateEntry(prevState, formData) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { formError: "Your session is not signed in — log in and try again." };
+  }
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) {
+    return { formError: "That entry could not be found." };
+  }
+
+  // Only the owner may update this entry.
+  const { data: existing, error: fetchError } = await supabase
+    .from("entries")
+    .select("id, owner, photo_url")
+    .eq("id", id)
+    .maybeSingle();
+  if (fetchError || !existing) {
+    console.error("contribute: entry fetch for update failed:", fetchError);
+    return { formError: "That entry could not be found." };
+  }
+  if (existing.owner !== user.id) {
+    console.error("contribute: update forbidden — owner mismatch");
+    return { formError: "You can only edit your own entries." };
+  }
+
+  const { values, fieldErrors } = trimmedFields(formData);
+
+  // Photo is optional when editing: keep the old photo_url unless the user
+  // picks a new file.
+  let photoUrl = existing.photo_url;
+  let photoPath = null;
+  const photo = formData.get("photo");
+  if (photo && photo.size > 0) {
+    if (photo.size > MAX_PHOTO_BYTES) {
+      fieldErrors.photo = "Photo must be 4 MB or smaller.";
+    } else {
+      const uploaded = await uploadPhoto(supabase, user.id, photo);
+      if (uploaded.error) {
+        fieldErrors.photo = uploaded.error;
+      } else {
+        photoUrl = uploaded.photoUrl;
+        photoPath = uploaded.photoPath;
+      }
+    }
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    return { fieldErrors };
+  }
+
+  // UPDATE ... and verify that a row actually came back.
+  const { data: updated, error: updateError } = await supabase
+    .from("entries")
+    .update({ ...values, photo_url: photoUrl })
+    .eq("id", id)
+    .eq("owner", user.id)
+    .select("id")
+    .maybeSingle();
+
+  if (updateError || !updated) {
+    console.error("contribute: entry update failed:", updateError);
+    if (photoPath) {
+      await supabase.storage
+        .from("photos")
+        .remove([photoPath])
+        .catch(() => {});
+    }
+    return { formError: "That change wasn't saved" };
+  }
+
+  redirect(`/entries/${updated.id}`);
+}
+
+export async function deleteEntry(prevState, formData) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { formError: "Your session is not signed in — log in and try again." };
+  }
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) {
+    return { formError: "That entry could not be found." };
+  }
+
+  // DELETE ... and verify that a row actually came back.
+  const { data: deleted, error: deleteError } = await supabase
+    .from("entries")
+    .delete()
+    .eq("id", id)
+    .eq("owner", user.id)
+    .select("id")
+    .maybeSingle();
+
+  if (deleteError || !deleted) {
+    console.error("contribute: entry delete failed:", deleteError);
+    return { formError: "That change wasn't saved" };
+  }
+
+  redirect("/");
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useActionState } from "react";
-import { submitEntry } from "../app/contribute/actions.js";
+import { submitEntry, updateEntry } from "../app/contribute/actions.js";
 import {
   FIELD_RULES,
   trimText,
@@ -40,6 +40,11 @@ const formStyles = {
     color: "#B4473A",
     margin: 0,
   },
+  photoHint: {
+    fontSize: 13,
+    color: "#6B6B68",
+    margin: "6px 0 0",
+  },
   disabled: {
     opacity: 0.6,
     cursor: "wait",
@@ -47,13 +52,12 @@ const formStyles = {
 };
 
 // The form is a client component so it can validate before submit and show
-// per-field messages. The real insert happens in the server action with the
-// session as the owner.
-export default function ContributeForm() {
-  const [serverState, formAction, pending] = useActionState(
-    submitEntry,
-    null
-  );
+// per-field messages. Without an `entry` it creates a new row; with one it
+// pre-fills the fields and updates that row instead. Owner always comes from
+// the session on the server, never from the form.
+export default function ContributeForm({ entry }) {
+  const action = entry ? updateEntry : submitEntry;
+  const [serverState, formAction, pending] = useActionState(action, null);
   const [clientErrors, setClientErrors] = useState(null);
 
   // Client pre-check wins while it is set; after a valid submit the server
@@ -69,9 +73,21 @@ export default function ContributeForm() {
     }
     const fieldErrors = validateTexts(values);
 
-    const photoError = validatePhotoClient(formData.get("photo"));
-    if (photoError) {
-      fieldErrors.photo = photoError;
+    const photo = formData.get("photo");
+    if (entry) {
+      // Photo is optional when editing; keep the old one unless a new file
+      // was chosen.
+      if (photo && photo.size > 0) {
+        const photoError = validatePhotoClient(photo);
+        if (photoError) {
+          fieldErrors.photo = photoError;
+        }
+      }
+    } else {
+      const photoError = validatePhotoClient(photo);
+      if (photoError) {
+        fieldErrors.photo = photoError;
+      }
     }
 
     if (Object.keys(fieldErrors).length > 0) {
@@ -94,6 +110,8 @@ export default function ContributeForm() {
       noValidate
       style={formStyles.form}
     >
+      {entry && <input type="hidden" name="id" value={entry.id} />}
+
       {errors?.formError && (
         <p style={formStyles.formError}>{errors.formError}</p>
       )}
@@ -108,6 +126,7 @@ export default function ContributeForm() {
               id={rule.name}
               name={rule.name}
               rows={5}
+              defaultValue={entry?.[rule.name] ?? ""}
               style={formStyles.textarea}
             />
           ) : (
@@ -115,6 +134,7 @@ export default function ContributeForm() {
               id={rule.name}
               name={rule.name}
               type="text"
+              defaultValue={entry?.[rule.name] ?? ""}
               style={authStyles.input}
             />
           )}
@@ -134,6 +154,11 @@ export default function ContributeForm() {
         accept="image/jpeg,image/png,image/webp"
         style={authStyles.input}
       />
+      {entry && (
+        <p style={formStyles.photoHint}>
+          Leave the photo empty to keep the current one.
+        </p>
+      )}
       {fieldError("photo") && (
         <p style={formStyles.fieldError}>{fieldError("photo")}</p>
       )}
@@ -147,7 +172,7 @@ export default function ContributeForm() {
             : authStyles.button
         }
       >
-        {pending ? "Uploading and saving…" : "Add entry"}
+        {pending ? "Saving…" : entry ? "Save changes" : "Add entry"}
       </button>
     </form>
   );
