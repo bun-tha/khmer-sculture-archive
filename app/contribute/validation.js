@@ -29,6 +29,16 @@ export function validateTexts(values) {
         `${rule.label} must be ${rule.min}–${rule.max} characters.`;
     }
   }
+
+  // In addition to the length rule, the Khmer title must contain at least
+  // one Khmer character (U+1780–U+17FF). When the length rule already failed
+  // (empty or too short), keep its message; otherwise make sure the text is
+  // actually written in Khmer script, not just any 1–120 characters.
+  const titleKm = values.title_km ?? "";
+  if (!errors.title_km && !/[\u1780-\u17FF]/.test(titleKm)) {
+    errors.title_km = "The Khmer title must be written in Khmer script.";
+  }
+
   return errors;
 }
 
