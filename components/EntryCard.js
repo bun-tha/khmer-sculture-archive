@@ -34,6 +34,10 @@ const styles = {
     color: "#242426",
     margin: "0 0 4px",
   },
+  titleLink: {
+    color: "#242426",
+    textDecoration: "none",
+  },
   titleKhmer: {
     fontFamily: "Georgia, 'Iowan Old Style', serif",
     fontSize: 20,
@@ -68,7 +72,11 @@ export default function EntryCard({ entry, index }) {
           </div>
         )}
         <div style={styles.content}>
-          <h3 style={styles.title}>{entry.title}</h3>
+          <h3 style={styles.title}>
+            <a href={`/entries/${entry.id}`} style={styles.titleLink}>
+              {entry.title}
+            </a>
+          </h3>
           {entry.titleKhmer && (
             <p style={styles.titleKhmer}>{entry.titleKhmer}</p>
           )}
