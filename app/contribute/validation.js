@@ -6,13 +6,31 @@ export const MAX_PHOTO_BYTES = 4 * 1024 * 1024;
 export const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export const FIELD_RULES = [
-  { name: "title", label: "Title", min: 1, max: 120 },
-  { name: "title_km", label: "Khmer title", min: 1, max: 120 },
-  { name: "description", label: "Description", min: 20, max: 2000 },
-  { name: "location", label: "Location", min: 1, max: 200 },
-  { name: "source", label: "Source", min: 1, max: 200 },
-  { name: "material", label: "Material", min: 1, max: 100 },
-  { name: "period", label: "Period", min: 1, max: 100 },
+  { name: "title", label: "Title", labelKm: "ចំណងជើង", min: 1, max: 120 },
+  {
+    name: "title_km",
+    label: "Khmer title",
+    labelKm: "ចំណងជើងជាភាសាខ្មែរ",
+    min: 1,
+    max: 120,
+  },
+  {
+    name: "description",
+    label: "Description",
+    labelKm: "ការពិពណ៌នា",
+    min: 20,
+    max: 2000,
+  },
+  { name: "location", label: "Location", labelKm: "ទីតាំង", min: 1, max: 200 },
+  { name: "source", label: "Source", labelKm: "ប្រភព", min: 1, max: 200 },
+  {
+    name: "material",
+    label: "Material",
+    labelKm: "សម្ភារៈ",
+    min: 1,
+    max: 100,
+  },
+  { name: "period", label: "Period", labelKm: "សម័យកាល", min: 1, max: 100 },
 ];
 
 export function trimText(formData, name) {
@@ -36,7 +54,8 @@ export function validateTexts(values) {
   // actually written in Khmer script, not just any 1–120 characters.
   const titleKm = values.title_km ?? "";
   if (!errors.title_km && !/[\u1780-\u17FF]/.test(titleKm)) {
-    errors.title_km = "The Khmer title must be written in Khmer script.";
+    errors.title_km =
+      "The Khmer title must be written in Khmer script. ចំណងជើងត្រូវតែសរសេរជាអក្សរខ្មែរ។";
   }
 
   return errors;

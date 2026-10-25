@@ -53,6 +53,9 @@ export default async function SiteHeader() {
       {user ? (
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span style={styles.email}>{user.email}</span>
+          <a href="/my-entries" style={styles.link}>
+            My entries
+          </a>
           <form action={logout} style={{ margin: 0 }}>
             <button type="submit" style={styles.logoutButton}>
               Log out

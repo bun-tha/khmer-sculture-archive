@@ -49,6 +49,25 @@ const formStyles = {
     opacity: 0.6,
     cursor: "wait",
   },
+  success: {
+    marginTop: 32,
+    padding: 24,
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #DDDDDA",
+    borderRadius: 10,
+  },
+  successText: {
+    fontSize: 16,
+    color: "#242426",
+    lineHeight: 1.6,
+    margin: 0,
+  },
+  successLink: {
+    display: "inline-block",
+    marginTop: 16,
+    fontSize: 14,
+    color: "#5B7CAD",
+  },
 };
 
 // The form is a client component so it can validate before submit and show
@@ -59,6 +78,22 @@ export default function ContributeForm({ entry }) {
   const action = entry ? updateEntry : submitEntry;
   const [serverState, formAction, pending] = useActionState(action, null);
   const [clientErrors, setClientErrors] = useState(null);
+
+  // Submission landed and the entry is waiting for review: show the
+  // thank-you message instead of the form (there is no published page yet).
+  if (serverState?.success) {
+    return (
+      <div style={formStyles.success}>
+        <p style={formStyles.successText}>
+          Thank you! Your entry was received and is waiting for review. It
+          will appear in the archive once approved. / អរគុណ! ការបញ្ជូនរបស់អ្នកត្រូវបានទទួលហើយ ហើយកំពុងរង់ចាំការត្រួតពិនិត្យ។ វានឹងបង្ហាញក្នុងប័ណ្ណសារនៅពេលត្រូវបានអនុម័ត។
+        </p>
+        <a href="/my-entries" style={formStyles.successLink}>
+          See your entries
+        </a>
+      </div>
+    );
+  }
 
   // Client pre-check wins while it is set; after a valid submit the server
   // response (same shape: { fieldErrors, formError }) takes over.
@@ -119,7 +154,7 @@ export default function ContributeForm({ entry }) {
       {FIELD_RULES.map((rule) => (
         <div key={rule.name}>
           <label htmlFor={rule.name} style={authStyles.cardLabel}>
-            {rule.label.toUpperCase()}
+            {rule.label.toUpperCase()} — {rule.labelKm}
           </label>
           {rule.name === "description" ? (
             <textarea
@@ -145,7 +180,7 @@ export default function ContributeForm({ entry }) {
       ))}
 
       <label htmlFor="photo" style={authStyles.cardLabel}>
-        PHOTO (JPEG, PNG, OR WEBP — MAX 4 MB)
+        PHOTO — រូបថត (JPEG, PNG, OR WEBP — MAX 4 MB)
       </label>
       <input
         id="photo"

@@ -55,6 +55,12 @@ const styles = {
     color: "#7C8894",
     margin: 0,
   },
+  credit: {
+    fontSize: 12,
+    color: "#7C8894",
+    fontStyle: "italic",
+    margin: "8px 0 0",
+  },
 };
 
 export default function EntryCard({ entry, index }) {
@@ -82,6 +88,11 @@ export default function EntryCard({ entry, index }) {
           )}
           <p style={styles.description}>{entry.description}</p>
           <p style={styles.meta}>{meta}</p>
+          {entry.contributor_name && (
+            <p style={styles.credit}>
+              Contributed by {entry.contributor_name}
+            </p>
+          )}
         </div>
       </div>
     </article>

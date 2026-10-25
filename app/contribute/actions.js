@@ -126,6 +126,10 @@ export async function submitEntry(prevState, formData) {
       material: values.material,
       period: values.period,
       owner: user.id,
+      // Credit for the entry, captured from the session at write time:
+      // auth.users emails are not readable by the anon key, so this is the
+      // only way visitors can see who contributed. Never comes from the form.
+      contributor_name: user.email || null,
       photo_url: uploaded.photoUrl,
     })
     .select("id")
@@ -142,7 +146,10 @@ export async function submitEntry(prevState, formData) {
     return { formError: "Your entry could not be saved — please try again." };
   }
 
-  redirect(`/entries/${inserted.id}`);
+  // New entries wait for review, so there is no entry page to visit yet.
+  // The form never sends a status: the database default ('pending') sets it,
+  // and the insert policy requires status = 'pending' anyway.
+  return { success: true };
 }
 
 export async function updateEntry(prevState, formData) {
@@ -210,19 +217,29 @@ export async function updateEntry(prevState, formData) {
     photoUrl = uploaded.photoUrl;
   }
 
+  // An edit sends the entry back to review (status = 'pending'), unless the
+  // editor is a reviewer, whose edits keep their current status. If the
+  // is_reviewer RPC is unreachable, treat the editor as a non-reviewer so
+  // the edit still moves to pending instead of being refused by policy 7.
+  const { data: isReviewer } = await supabase.rpc("is_reviewer");
+  const updates = {
+    title: values.title,
+    title_km: values.title_km,
+    description: values.description,
+    location: values.location,
+    source: values.source,
+    material: values.material,
+    period: values.period,
+    photo_url: photoUrl,
+  };
+  if (isReviewer !== true) {
+    updates.status = "pending";
+  }
+
   // UPDATE ... and verify that a row actually came back.
   const { data: updated, error: updateError } = await supabase
     .from("entries")
-    .update({
-      title: values.title,
-      title_km: values.title_km,
-      description: values.description,
-      location: values.location,
-      source: values.source,
-      material: values.material,
-      period: values.period,
-      photo_url: photoUrl,
-    })
+    .update(updates)
     .eq("id", id)
     .eq("owner", user.id)
     .select("id")

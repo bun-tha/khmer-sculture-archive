@@ -92,6 +92,7 @@ export default function Home() {
     supabase
       .from("entries")
       .select("*")
+      .eq("status", "published")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (cancelled) return;
