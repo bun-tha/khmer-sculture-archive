@@ -3,9 +3,11 @@ import { createClient } from "../../utils/supabase/server.js";
 import { signUp } from "./actions.js";
 import authStyles from "../authStyles.js";
 import { t } from "../../utils/i18n.js";
+import { serverLang } from "../../utils/server-lang.js";
 
 export default async function SignupPage({ searchParams }) {
   const sp = await searchParams;
+  const lang = await serverLang();
 
   const supabase = await createClient();
   const {
@@ -19,21 +21,21 @@ export default async function SignupPage({ searchParams }) {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>{t("home.kicker")}</p>
-      <h1 style={authStyles.title}>{t("signup.title")}</h1>
+      <p style={authStyles.kicker}>{t("home.kicker", lang)}</p>
+      <h1 style={authStyles.title}>{t("signup.title", lang)}</h1>
       <p style={authStyles.description}>
-        {t("signup.description")}
+        {t("signup.description", lang)}
       </p>
 
       {sp.error !== undefined && (
         <p style={authStyles.notice}>
-          {t("signup.error")}
+          {t("signup.error", lang)}
         </p>
       )}
 
       <form action={signUp} style={authStyles.card}>
         <label style={authStyles.cardLabel} htmlFor="email">
-          {t("field.email").toUpperCase()}
+          {t("field.email", lang).toUpperCase()}
         </label>
         <input
           id="email"
@@ -45,7 +47,7 @@ export default async function SignupPage({ searchParams }) {
         />
 
         <label style={authStyles.cardLabel} htmlFor="password">
-          {t("field.password").toUpperCase()}
+          {t("field.password", lang).toUpperCase()}
         </label>
         <input
           id="password"
@@ -58,13 +60,13 @@ export default async function SignupPage({ searchParams }) {
         />
 
         <button type="submit" style={authStyles.button}>
-          {t("signup.title")}
+          {t("signup.title", lang)}
         </button>
       </form>
 
       <p style={authStyles.footer}>
-        {t("signup.hasAccount")}{" "}
-        <a href="/login" style={authStyles.link}>{t("nav.login")}</a>.
+        {t("signup.hasAccount", lang)}{" "}
+        <a href="/login" style={authStyles.link}>{t("nav.login", lang)}</a>.
       </p>
     </main>
   );

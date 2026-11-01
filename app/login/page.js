@@ -3,9 +3,11 @@ import { createClient } from "../../utils/supabase/server.js";
 import { login } from "./actions.js";
 import authStyles from "../authStyles.js";
 import { t } from "../../utils/i18n.js";
+import { serverLang } from "../../utils/server-lang.js";
 
 export default async function LoginPage({ searchParams }) {
   const sp = await searchParams;
+  const lang = await serverLang();
 
   const supabase = await createClient();
   const {
@@ -19,24 +21,24 @@ export default async function LoginPage({ searchParams }) {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>{t("home.kicker")}</p>
-      <h1 style={authStyles.title}>{t("login.title")}</h1>
+      <p style={authStyles.kicker}>{t("home.kicker", lang)}</p>
+      <h1 style={authStyles.title}>{t("login.title", lang)}</h1>
       <p style={authStyles.description}>
-        {t("login.description")}
+        {t("login.description", lang)}
       </p>
 
       {sp.error !== undefined && (
-        <p style={authStyles.notice}>{t("login.invalid")}</p>
+        <p style={authStyles.notice}>{t("login.invalid", lang)}</p>
       )}
       {sp.check !== undefined && (
         <p style={authStyles.notice}>
-          {t("login.checkEmail")}
+          {t("login.checkEmail", lang)}
         </p>
       )}
 
       <form action={login} style={authStyles.card}>
         <label style={authStyles.cardLabel} htmlFor="email">
-          {t("field.email").toUpperCase()}
+          {t("field.email", lang).toUpperCase()}
         </label>
         <input
           id="email"
@@ -48,7 +50,7 @@ export default async function LoginPage({ searchParams }) {
         />
 
         <label style={authStyles.cardLabel} htmlFor="password">
-          {t("field.password").toUpperCase()}
+          {t("field.password", lang).toUpperCase()}
         </label>
         <input
           id="password"
@@ -60,13 +62,13 @@ export default async function LoginPage({ searchParams }) {
         />
 
         <button type="submit" style={authStyles.button}>
-          {t("login.title")}
+          {t("login.title", lang)}
         </button>
       </form>
 
       <p style={authStyles.footer}>
-        {t("login.newHere")}{" "}
-        <a href="/signup" style={authStyles.link}>{t("login.createAccount")}</a>.
+        {t("login.newHere", lang)}{" "}
+        <a href="/signup" style={authStyles.link}>{t("login.createAccount", lang)}</a>.
       </p>
     </main>
   );

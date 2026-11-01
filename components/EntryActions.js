@@ -62,7 +62,7 @@ const styles = {
 
 // Owner-only actions for an entry page: Edit links to the edit form, Delete
 // asks for confirmation before it calls the delete server action.
-export default function EntryActions({ id }) {
+export default function EntryActions({ id, lang }) {
   const [confirming, setConfirming] = useState(false);
   const [state, formAction, pending] = useActionState(deleteEntry, null);
 
@@ -70,7 +70,7 @@ export default function EntryActions({ id }) {
     return (
       <div style={styles.confirm}>
         <p style={styles.confirmText}>
-          {t("actions.confirm")}
+          {t("actions.confirm", lang)}
         </p>
         {state?.formError && <p style={styles.notice}>{state.formError}</p>}
         <form
@@ -83,10 +83,10 @@ export default function EntryActions({ id }) {
             disabled={pending}
             style={pending ? { ...styles.danger, ...styles.disabled } : styles.danger}
           >
-            {pending ? t("actions.deleting") : t("actions.delete")}
+            {pending ? t("actions.deleting", lang) : t("actions.delete", lang)}
           </button>
           <button type="button" onClick={() => setConfirming(false)} style={styles.button}>
-            {t("actions.cancel")}
+            {t("actions.cancel", lang)}
           </button>
         </form>
       </div>
@@ -96,10 +96,10 @@ export default function EntryActions({ id }) {
   return (
     <div style={styles.row}>
       <a href={`/entries/${id}/edit`} style={styles.link}>
-        {t("actions.edit")}
+        {t("actions.edit", lang)}
       </a>
       <button type="button" onClick={() => setConfirming(true)} style={styles.button}>
-        {t("actions.delete")}
+        {t("actions.delete", lang)}
       </button>
     </div>
   );

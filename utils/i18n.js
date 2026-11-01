@@ -241,16 +241,10 @@ function find(obj, key) {
   return typeof node === "string" ? node : undefined;
 }
 
-// Language lives in a "lang" cookie (default "en") so the server and the
-// browser agree. Client code reads document.cookie; server code reads the
-// same cookie via utils/server-lang.js and passes lang explicitly to t().
+// Fallback language used only when a caller forgets to pass lang to t().
+// Client components must receive lang via props (from serverLang()) and hand
+// it explicitly to t(); nothing reads a cookie here anymore.
 export function getLang() {
-  if (typeof document !== "undefined") {
-    const match = document.cookie.match(/(?:^|;\s*)lang=([^;]*)/);
-    if (match && match[1] === "km") {
-      return "km";
-    }
-  }
   return "en";
 }
 

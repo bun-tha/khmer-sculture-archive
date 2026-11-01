@@ -65,7 +65,7 @@ const styles = {
   },
 };
 
-export default function EntryCard({ entry, index }) {
+export default function EntryCard({ entry, index, lang = "en" }) {
   const meta = [entry.location, entry.material, entry.era]
     .filter(Boolean)
     .join(" · ");
@@ -92,7 +92,7 @@ export default function EntryCard({ entry, index }) {
           <p style={styles.meta}>{meta}</p>
           {entry.contributor_name && (
             <p style={styles.credit}>
-              {t("entry.contributedBy", { name: entry.contributor_name })}
+              {t("entry.contributedBy", lang, { name: entry.contributor_name })}
             </p>
           )}
         </div>

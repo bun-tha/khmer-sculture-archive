@@ -75,7 +75,7 @@ const formStyles = {
 // per-field messages. Without an `entry` it creates a new row; with one it
 // pre-fills the fields and updates that row instead. Owner always comes from
 // the session on the server, never from the form.
-export default function ContributeForm({ entry }) {
+export default function ContributeForm({ entry, lang }) {
   const action = entry ? updateEntry : submitEntry;
   const [serverState, formAction, pending] = useActionState(action, null);
   const [clientErrors, setClientErrors] = useState(null);
@@ -86,10 +86,10 @@ export default function ContributeForm({ entry }) {
     return (
       <div style={formStyles.success}>
         <p style={formStyles.successText}>
-          {t("form.success")} {t("form.success", "km")}
+          {t("form.success", lang)} {t("form.success", "km")}
         </p>
         <a href="/my-entries" style={formStyles.successLink}>
-          {t("form.seeEntries")}
+          {t("form.seeEntries", lang)}
         </a>
       </div>
     );
@@ -106,20 +106,20 @@ export default function ContributeForm({ entry }) {
     for (const rule of FIELD_RULES) {
       values[rule.name] = trimText(formData, rule.name);
     }
-    const fieldErrors = validateTexts(values);
+    const fieldErrors = validateTexts(values, lang);
 
     const photo = formData.get("photo");
     if (entry) {
       // Photo is optional when editing; keep the old one unless a new file
       // was chosen.
       if (photo && photo.size > 0) {
-        const photoError = validatePhotoClient(photo);
+        const photoError = validatePhotoClient(photo, lang);
         if (photoError) {
           fieldErrors.photo = photoError;
         }
       }
     } else {
-      const photoError = validatePhotoClient(photo);
+      const photoError = validatePhotoClient(photo, lang);
       if (photoError) {
         fieldErrors.photo = photoError;
       }
@@ -154,7 +154,7 @@ export default function ContributeForm({ entry }) {
       {FIELD_RULES.map((rule) => (
         <div key={rule.name}>
           <label htmlFor={rule.name} style={authStyles.cardLabel}>
-            {t(rule.labelKey).toUpperCase()} — {t(rule.labelKey, "km")}
+            {t(rule.labelKey, lang).toUpperCase()} — {t(rule.labelKey, "km")}
           </label>
           {rule.name === "description" ? (
             <textarea
@@ -180,7 +180,7 @@ export default function ContributeForm({ entry }) {
       ))}
 
       <label htmlFor="photo" style={authStyles.cardLabel}>
-        {t("field.photo").toUpperCase()} — {t("field.photo", "km")} (JPEG, PNG, OR WEBP — MAX 4 MB)
+        {t("field.photo", lang).toUpperCase()} — {t("field.photo", "km")} (JPEG, PNG, OR WEBP — MAX 4 MB)
       </label>
       <input
         id="photo"
@@ -191,7 +191,7 @@ export default function ContributeForm({ entry }) {
       />
       {entry && (
         <p style={formStyles.photoHint}>
-          {t("form.photoHint")}
+          {t("form.photoHint", lang)}
         </p>
       )}
       {fieldError("photo") && (
@@ -208,10 +208,10 @@ export default function ContributeForm({ entry }) {
         }
       >
         {pending
-          ? t("form.saving")
+          ? t("form.saving", lang)
           : entry
-            ? t("form.save")
-            : t("form.submit")}
+            ? t("form.save", lang)
+            : t("form.submit", lang)}
       </button>
     </form>
   );

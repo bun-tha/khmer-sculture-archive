@@ -3,6 +3,7 @@ import EntryCard from "../../../components/EntryCard.js";
 import EntryActions from "../../../components/EntryActions.js";
 import { createClient } from "../../../utils/supabase/server.js";
 import { t } from "../../../utils/i18n.js";
+import { serverLang } from "../../../utils/server-lang.js";
 
 const styles = {
   wrap: {
@@ -36,6 +37,7 @@ function mapRow(row) {
 
 export default async function EntryPage({ params }) {
   const { id } = await params;
+  const lang = await serverLang();
 
   const supabase = await createClient();
   const { data: entry, error } = await supabase
@@ -56,12 +58,12 @@ export default async function EntryPage({ params }) {
 
   return (
     <main style={styles.wrap}>
-      <p style={styles.kicker}>{t("home.kicker")}</p>
+      <p style={styles.kicker}>{t("home.kicker", lang)}</p>
       <a href="/" style={styles.back}>
-        {t("entry.back")}
+        {t("entry.back", lang)}
       </a>
-      <EntryCard entry={mapRow(entry)} index={0} />
-      {canEdit && <EntryActions id={entry.id} />}
+      <EntryCard entry={mapRow(entry)} index={0} lang={lang} />
+      {canEdit && <EntryActions id={entry.id} lang={lang} />}
     </main>
   );
 }
