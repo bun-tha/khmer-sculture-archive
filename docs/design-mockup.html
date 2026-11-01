@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khmer Stone Archive – mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Instrument+Sans:wght@400;600&family=Noto+Serif+Khmer:wght@400;700&family=Noto+Sans+Khmer:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e6e7e1;--surf:#d9dbd3;--ink:#23272a;--mute:#5b6260;--line:#b9bdb3;--moss:#4f6b45;--moss-ink:#fff;--stone-a:#c9c4b4;--stone-b:#8d8a7c;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1e1d;--surf:#232827;--ink:#e8e8e1;--mute:#a2a89f;--line:#3a413e;--moss:#9db98c;--moss-ink:#16201a;--stone-a:#9a9686;--stone-b:#55544b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1a1e1d;--surf:#232827;--ink:#e8e8e1;--mute:#a2a89f;--line:#3a413e;--moss:#9db98c;--moss-ink:#16201a;--stone-a:#9a9686;--stone-b:#55544b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 "Instrument Sans","Noto Sans Khmer",system-ui,sans-serif}
+[lang=km] body,body.km{line-height:1.9}
+h1,h2,h3{font-family:"Newsreader","Noto Serif Khmer",Georgia,serif;font-weight:400;line-height:1.12;margin:0}
+.km h1,.km h2,.km h3{line-height:1.45}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--moss);outline-offset:3px}
+header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem clamp(1rem,4vw,3rem);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font:600 1.25rem "Newsreader","Noto Serif Khmer",serif;text-decoration:none}
+nav{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink);padding:.6rem 1rem;min-height:44px;border-radius:2px}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cta{background:var(--moss);color:var(--moss-ink);border-color:var(--moss);font-weight:600;text-decoration:none;display:inline-flex;align-items:center}
+main{max-width:1180px;margin:0 auto;padding:0 clamp(1rem,4vw,3rem)}
+.view{display:none}.view.on{display:block}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(1.5rem,5vw,4rem);align-items:center;padding:clamp(2rem,6vw,5rem) 0}
+.hero h1{font-size:clamp(2.4rem,6vw,4.6rem);letter-spacing:-.01em}
+.hero p{max-width:34em;color:var(--mute);margin:1.25rem 0 1.75rem;font-size:1.1rem}
+.arch{aspect-ratio:4/5;border-radius:999px 999px 4px 4px;overflow:hidden;background:linear-gradient(160deg,var(--stone-a),var(--stone-b));border:1px solid var(--line)}
+.arch svg,.thumb svg,.big svg{width:100%;height:100%;display:block}
+.sec{padding:2.5rem 0 4rem}
+.sec h2{font-size:clamp(1.6rem,3vw,2.2rem)}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.25rem 0 1.75rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.5rem}
+.card{background:none;border:0;padding:0;text-align:left;min-height:0}
+.thumb{aspect-ratio:1;background:linear-gradient(160deg,var(--stone-a),var(--stone-b));overflow:hidden;border-radius:2px}
+.thumb svg{transition:transform .3s}.card:hover .thumb svg{transform:scale(1.05)}
+.card h3{font-size:1.25rem;margin:.75rem 0 .1rem}
+.card small{color:var(--mute)}
+.empty{padding:2rem;border:1px dashed var(--line);color:var(--mute)}
+.back{margin:1.5rem 0}
+.detail{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(1.5rem,4vw,3.5rem);padding-bottom:3rem}
+.big{aspect-ratio:1;background:linear-gradient(160deg,var(--stone-a),var(--stone-b));overflow:hidden;position:relative;cursor:zoom-in;border-radius:2px}
+.big.z{cursor:zoom-out}.big svg{transition:transform .25s;transform-origin:var(--ox,50%) var(--oy,50%)}.big.z svg{transform:scale(2.2)}
+.hint{color:var(--mute);font-size:.9rem;margin:.5rem 0 0}
+.detail h1{font-size:clamp(2rem,4.5vw,3.2rem)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1.5rem;margin:1.5rem 0;padding:1rem 0;border-block:1px solid var(--line)}
+dt{color:var(--mute)}dd{margin:0}
+.story{max-width:34em}
+.rel{padding:2rem 0 4rem;border-top:1px solid var(--line)}
+footer{border-top:1px solid var(--line);padding:1.5rem clamp(1rem,4vw,3rem);color:var(--mute);font-size:.9rem}
+@media (max-width:760px){.hero,.detail{grid-template-columns:1fr}.arch{max-width:360px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<filter id="stone" x="0" y="0" width="100%" height="100%">
+ <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4" result="n"/>
+ <feColorMatrix in="n" type="matrix" values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 -.2" result="g"/>
+ <feComposite in="g" in2="SourceGraphic" operator="in" result="gi"/>
+ <feBlend in="SourceGraphic" in2="gi" mode="multiply"/>
+</filter>
+<symbol id="s-face" viewBox="0 0 200 200"><g filter="url(#stone)" fill="#b8b29f" stroke="#4a473e" stroke-width="2" stroke-linejoin="round"><path d="M100 14l16 24 14-12 8 30H62l8-30 14 12z"/><path d="M64 56h72l6 70q-6 44-42 52-36-8-42-52z"/><path d="M76 92q10-8 22 0M102 92q10-8 22 0" fill="none"/><path d="M100 98v34l-9 4M100 136l9-4" fill="none"/><path d="M84 152q16 8 32 0q-16 6-32 0z" fill="#8f897a"/></g></symbol>
+<symbol id="s-apsara" viewBox="0 0 200 200"><g filter="url(#stone)" fill="#b8b29f" stroke="#4a473e" stroke-width="2" stroke-linejoin="round"><path d="M100 20l10 16h-20z"/><circle cx="100" cy="52" r="15"/><path d="M80 74q20-10 40 0l8 50q-28 14-56 0z"/><path d="M80 78q-30 4-40 34M120 78q30-18 44-4" fill="none"/><path d="M72 124q28 30 56 0l10 56H62z"/></g></symbol>
+<symbol id="s-naga" viewBox="0 0 200 200"><g filter="url(#stone)" fill="#b8b29f" stroke="#4a473e" stroke-width="2" stroke-linejoin="round"><path d="M100 150q-50 0-56-40q0-30 56-30t56 30q-6 40-56 40z" opacity="0"/><path d="M30 170q24-14 50-4t50 0 40-14v22H30z"/><path d="M40 150q10-90 60-100 50 10 60 100"/><path d="M60 140q8-60 40-70 32 10 40 70" fill="none"/><path d="M100 50q-8-18 0-30 8 12 0 30z"/><path d="M70 62q-14-14-8-28 12 8 8 28zM130 62q14-14 8-28-12 8-8 28z"/></g></symbol>
+<symbol id="s-lotus" viewBox="0 0 200 200"><g filter="url(#stone)" fill="#b8b29f" stroke="#4a473e" stroke-width="2" stroke-linejoin="round"><path d="M100 40q24 40 0 80q-24-40 0-80z"/><path d="M60 62q40 20 30 66q-40-14-30-66zM140 62q-40 20-30 66q40-14 30-66z"/><path d="M30 100q44 6 54 46q-46 0-54-46zM170 100q-44 6-54 46q46 0 54-46z"/><rect x="40" y="150" width="120" height="28" rx="2"/></g></symbol>
+</defs>
+</svg>
+
+<header>
+ <a class="brand" href="#home" data-i="brand">Khmer Stone Archive</a>
+ <nav aria-label="Main">
+  <a class="btn" href="#home" data-i="home">Home</a>
+  <a class="btn" href="#collection" data-i="coll">Collection</a>
+  <span role="group" aria-label="Language">
+   <button id="l-en" aria-pressed="true">EN</button><button id="l-km" aria-pressed="false" lang="km">ខ្មែរ</button>
+  </span>
+ </nav>
+</header>
+
+<main>
+ <section id="v-home" class="view on">
+  <div class="hero">
+   <div>
+    <h1 data-i="h1">Stone remembers what hands carved.</h1>
+    <p data-i="lead">A growing archive of Khmer stone sculpture, with the story, place and period behind each piece.</p>
+    <a class="btn cta" href="#collection" data-i="browse">Browse the collection</a>
+   </div>
+   <div class="arch" role="img" aria-label="Carved stone face, sample illustration"><svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice"><use href="#s-face"/></svg></div>
+  </div>
+  <div class="sec" id="collection">
+   <h2 data-i="coll">Collection</h2>
+   <div class="chips" id="chips" role="group" aria-label="Filter by type"></div>
+   <div class="grid" id="grid"></div>
+  </div>
+ </section>
+
+ <section id="v-detail" class="view">
+  <button class="back" id="back" data-i="back">Back to collection</button>
+  <div class="detail">
+   <div>
+    <div class="big" id="big" tabindex="0" role="button" aria-label="Zoom image"><svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice"><use id="big-use" href="#s-face"/></svg></div>
+    <p class="hint" data-i="zoom">Click the image to zoom in on the carving.</p>
+   </div>
+   <div>
+    <h1 id="d-title"></h1>
+    <dl id="d-meta"></dl>
+    <p class="story" id="d-story"></p>
+   </div>
+  </div>
+  <div class="rel"><h2 data-i="rel">Related pieces</h2><div class="grid" id="rel-grid" style="margin-top:1.5rem"></div></div>
+ </section>
+</main>
+<footer data-i="foot">Mockup with sample entries and placeholder illustrations. Replace with your own photography.</footer>
+
+<script>
+var UI={
+ en:{brand:"Khmer Stone Archive",home:"Home",coll:"Collection",h1:"Stone remembers what hands carved.",lead:"A growing archive of Khmer stone sculpture, with the story, place and period behind each piece.",browse:"Browse the collection",back:"Back to collection",zoom:"Click the image to zoom in on the carving.",rel:"Related pieces",foot:"Mockup with sample entries and placeholder illustrations. Replace with your own photography.",all:"All",empty:"No pieces match this filter yet. Choose another type.",period:"Period",material:"Material",size:"Size",loc:"Location"},
+ km:{brand:"បណ្ណសារថ្មឆ្លាក់ខ្មែរ",home:"ទំព័រដើម",coll:"បណ្តុំស្នាដៃ",h1:"ថ្មចងចាំអ្វីដែលដៃបានឆ្លាក់",lead:"បណ្ណសារស្នាដៃឆ្លាក់ថ្មខ្មែរ ជាមួយរឿងរ៉ាវ ទីកន្លែង និងសម័យកាលនៃស្នាដៃនីមួយៗ។",browse:"រកមើលបណ្តុំស្នាដៃ",back:"ត្រឡប់ទៅបណ្តុំស្នាដៃ",zoom:"ចុចលើរូបភាពដើម្បីពង្រីកមើលការឆ្លាក់។",rel:"ស្នាដៃដែលទាក់ទង",foot:"គំរូសាកល្បង មានទិន្នន័យ និងរូបភាពជំនួស។ សូមជំនួសដោយរូបថតរបស់អ្នក។",all:"ទាំងអស់",empty:"មិនទាន់មានស្នាដៃត្រូវនឹងតម្រងនេះទេ។ សូមជ្រើសរើសប្រភេទផ្សេង។",period:"សម័យកាល",material:"សម្ភារៈ",size:"ទំហំ",loc:"ទីតាំង"}
+};
+var P=[
+ {id:"face",sym:"s-face",type:"face",en:{t:"Face tower fragment",ty:"Face",p:"Late 12th to early 13th century",m:"Sandstone",s:"Sample: 92 cm tall",l:"Sample: Angkor region",st:"A serene face with closed eyes and a faint smile, carved in the Bayon style. The full lips and heavy lids are what make the expression read as calm from far away."},km:{t:"ព្រះភក្ត្រ ស្ទីលបាយ័ន",ty:"ព្រះភក្ត្រ",p:"ចុងសតវត្សទី១២ ដល់ដើមសតវត្សទី១៣",m:"ថ្មភក់",s:"គំរូ៖ កម្ពស់ ៩២ សង់ទីម៉ែត្រ",l:"គំរូ៖ តំបន់អង្គរ",st:"ព្រះភក្ត្រស្ងប់ស្ងាត់ ភ្នែកបិទ និងស្នាមញញឹមស្រាល ឆ្លាក់តាមស្ទីលបាយ័ន។"}},
+ {id:"apsara",sym:"s-apsara",type:"relief",en:{t:"Apsara relief",ty:"Relief",p:"12th century",m:"Sandstone",s:"Sample: 140 × 60 cm",l:"Sample: Angkor region",st:"A standing apsara in shallow relief. Depth is kept low so the figure catches raking light and reads clearly on a flat wall."},km:{t:"រូបចម្លាក់អប្សរា",ty:"ចម្លាក់ផ្ទាំង",p:"សតវត្សទី១២",m:"ថ្មភក់",s:"គំរូ៖ ១៤០ × ៦០ សង់ទីម៉ែត្រ",l:"គំរូ៖ តំបន់អង្គរ",st:"អប្សរាឈរក្នុងចម្លាក់ទាប ដែលចាប់ពន្លឺទ្រេតបានល្អ។"}},
+ {id:"naga",sym:"s-naga",type:"naga",en:{t:"Naga balustrade",ty:"Naga",p:"12th century",m:"Sandstone",s:"Sample: 210 cm long",l:"Sample: causeway entrance",st:"A multi-headed serpent guarding a causeway. Its hoods fan out like a crown and mark the crossing from the everyday to the sacred."},km:{t:"កែបនាគ",ty:"នាគ",p:"សតវត្សទី១២",m:"ថ្មភក់",s:"គំរូ៖ បណ្តោយ ២១០ សង់ទីម៉ែត្រ",l:"គំរូ៖ ច្រកចូលផ្លូវថ្នល់",st:"នាគច្រើនក្បាលការពារផ្លូវចូល ដែលសម្គាល់ការឆ្លងពីលោកីយ៍ទៅទីសក្ការៈ។"}},
+ {id:"lotus",sym:"s-lotus",type:"pedestal",en:{t:"Lotus pedestal",ty:"Pedestal",p:"Sample: 11th century",m:"Sandstone",s:"Sample: 38 cm tall",l:"Sample: museum storage",st:"A lotus-petal base that once held a standing figure. Only the pedestal survives, so its worn petals are the main clue to the missing statue."},km:{t:"ជើងទ្រផ្កាឈូក",ty:"ជើងទ្រ",p:"គំរូ៖ សតវត្សទី១១",m:"ថ្មភក់",s:"គំរូ៖ កម្ពស់ ៣៨ សង់ទីម៉ែត្រ",l:"គំរូ៖ ឃ្លាំងសារមន្ទីរ",st:"ជើងទ្រផ្កាឈូកដែលធ្លាប់ទ្រតុក្កតា។ នៅសល់តែជើងទ្រប៉ុណ្ណោះ។"}}
+];
+var lang="en",filter="all",cur="face";
+function T(k){return UI[lang][k]}
+function $(i){return document.getElementById(i)}
+function card(p){var d=p[lang];return '<button class="card" data-id="'+p.id+'"><div class="thumb"><svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#'+p.sym+'"/></svg></div><h3>'+d.t+'</h3><small>'+d.ty+'</small></button>'}
+function renderGrid(){
+ var types=["all"].concat(P.map(function(p){return p.type}));
+ $("chips").innerHTML=types.map(function(t){var lbl=t=="all"?T("all"):P.filter(function(p){return p.type==t})[0][lang].ty;return '<button data-f="'+t+'" aria-pressed="'+(filter==t)+'">'+lbl+'</button>'}).join("");
+ var list=P.filter(function(p){return filter=="all"||p.type==filter});
+ $("grid").innerHTML=list.length?list.map(card).join(""):'<div class="empty">'+T("empty")+'</div>';
+}
+function renderDetail(){
+ var p=P.filter(function(x){return x.id==cur})[0],d=p[lang];
+ $("d-title").textContent=d.t;$("big-use").setAttribute("href","#"+p.sym);
+ $("d-meta").innerHTML='<dt>'+T("period")+'</dt><dd>'+d.p+'</dd><dt>'+T("material")+'</dt><dd>'+d.m+'</dd><dt>'+T("size")+'</dt><dd>'+d.s+'</dd><dt>'+T("loc")+'</dt><dd>'+d.l+'</dd>';
+ $("d-story").textContent=d.st;
+ $("rel-grid").innerHTML=P.filter(function(x){return x.id!=cur}).slice(0,3).map(card).join("");
+ $("big").classList.remove("z");
+}
+function applyLang(){
+ document.documentElement.lang=lang=="km"?"km":"en";document.body.classList.toggle("km",lang=="km");
+ document.querySelectorAll("[data-i]").forEach(function(e){e.textContent=T(e.getAttribute("data-i"))});
+ $("l-en").setAttribute("aria-pressed",lang=="en");$("l-km").setAttribute("aria-pressed",lang=="km");
+ renderGrid();renderDetail();
+}
+function route(){
+ var h=location.hash.replace("#","")||"home";
+ var isD=h.indexOf("piece-")==0;
+ if(isD){cur=h.slice(6);if(!P.some(function(p){return p.id==cur}))cur="face";renderDetail()}
+ $("v-home").classList.toggle("on",!isD);$("v-detail").classList.toggle("on",isD);
+ if(isD)window.scrollTo(0,0);
+ else if(h=="collection"){var c=$("collection");if(c)c.scrollIntoView()}
+}
+document.addEventListener("click",function(e){
+ var c=e.target.closest(".card");if(c){location.hash="piece-"+c.getAttribute("data-id");return}
+ var f=e.target.closest("[data-f]");if(f){filter=f.getAttribute("data-f");renderGrid()}
+});
+$("back").onclick=function(){location.hash="collection"};
+$("l-en").onclick=function(){lang="en";applyLang()};
+$("l-km").onclick=function(){lang="km";applyLang()};
+var big=$("big");
+big.onclick=function(e){var r=big.getBoundingClientRect();big.style.setProperty("--ox",((e.clientX-r.left)/r.width*100)+"%");big.style.setProperty("--oy",((e.clientY-r.top)/r.height*100)+"%");big.classList.toggle("z")};
+big.onkeydown=function(e){if(e.key=="Enter"||e.key==" "){e.preventDefault();big.classList.toggle("z")}};
+window.addEventListener("hashchange",route);
+applyLang();route();
+</script>
+</body>
+</html>
