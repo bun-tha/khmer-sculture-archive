@@ -20,6 +20,7 @@ export const strings = {
       curatedBy: "CURATED BY",
       source: "SOURCE",
       searchPlaceholder: "Search the archive...",
+      all: "All",
       count: "showing {shown} of {total} entries",
       loading: "Loading the archive…",
       error: "The archive is unreachable right now — try again in a moment.",
@@ -130,6 +131,7 @@ export const strings = {
       curatedBy: "ថែរក្សាដោយ",
       source: "ប្រភព",
       searchPlaceholder: "ស្វែងរកក្នុងប័ណ្ណសារ...",
+      all: "ទាំងអស់",
       count: "បង្ហាញ {shown} ក្នុងចំណោម {total} ធាតុ",
       loading: "កំពុងផ្ទុកប័ណ្ណសារ…",
       error: "",
@@ -239,14 +241,17 @@ function find(obj, key) {
   return typeof node === "string" ? node : undefined;
 }
 
-let defaultLang = "en";
-
-export function setLang(lang) {
-  defaultLang = lang === "km" ? "km" : "en";
-}
-
+// Language lives in a "lang" cookie (default "en") so the server and the
+// browser agree. Client code reads document.cookie; server code reads the
+// same cookie via utils/server-lang.js and passes lang explicitly to t().
 export function getLang() {
-  return defaultLang;
+  if (typeof document !== "undefined") {
+    const match = document.cookie.match(/(?:^|;\s*)lang=([^;]*)/);
+    if (match && match[1] === "km") {
+      return "km";
+    }
+  }
+  return "en";
 }
 
 export function hasLang(key) {
@@ -257,7 +262,7 @@ export function hasLang(key) {
 }
 
 export function t(key, lang, vars) {
-  const requested = lang === "km" ? "km" : "en";
+  const requested = lang === "km" || lang === "en" ? lang : getLang();
   const fallback = requested === "km" ? "en" : "km";
   const value =
     find(strings[requested], key) ?? find(strings[fallback], key) ?? key;

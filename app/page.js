@@ -1,76 +1,133 @@
    "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import collection from "../collection.config.js";
-import EntryCard from "../components/EntryCard.js";
 import { createClient } from "../utils/supabase/client.js";
-import { t } from "../utils/i18n.js";
+import { getLang, t } from "../utils/i18n.js";
+import HomeGridCard from "../components/HomeGridCard.js";
 
 const styles = {
   wrap: {
-    maxWidth: 720,
+    maxWidth: 1180,
     margin: "0 auto",
-    padding: "80px 24px",
+    padding: "0 clamp(1rem, 4vw, 3rem)",
+  },
+  hero: {
+    display: "grid",
+    gridTemplateColumns: "1.1fr 0.9fr",
+    gap: "clamp(1.5rem, 5vw, 4rem)",
+    alignItems: "center",
+    padding: "clamp(2rem, 6vw, 4rem) 0",
   },
   kicker: {
-    fontFamily: "'Courier New', monospace",
-    color: "#5B7CAD",
-    fontSize: 14,
-    letterSpacing: 1,
+    fontFamily: "var(--font-sans)",
+    fontWeight: 600,
+    color: "var(--moss)",
+    fontSize: 12,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    margin: 0,
   },
   title: {
-    fontSize: 48,
-    fontWeight: 700,
-    margin: "16px 0 12px",
-    lineHeight: 1.1,
+    fontFamily: "var(--font-serif)",
+    fontWeight: 400,
+    fontSize: "var(--text-hero)",
+    letterSpacing: "-0.01em",
+    lineHeight: 1.12,
+    color: "var(--ink)",
+    margin: "18px 0 12px",
   },
-  description: {
-    fontSize: 18,
-    color: "#6B6B68",
+  intro: {
+    maxWidth: "34em",
+    color: "var(--mute)",
+    fontSize: "var(--text-lg)",
     lineHeight: 1.6,
     margin: 0,
   },
-  card: {
-    marginTop: 48,
-    padding: 24,
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
-    borderRadius: 10,
+  creditLine: {
+    margin: "14px 0 0",
+    color: "var(--mute)",
+    fontSize: "var(--text-sm)",
+    lineHeight: 1.5,
   },
-  cardLabel: {
-    fontFamily: "'Courier New', monospace",
-    fontSize: 12,
-    color: "#5B7CAD",
-    margin: 0,
+  arch: {
+    position: "relative",
+    aspectRatio: "4 / 5",
+    borderRadius: "999px 999px 4px 4px",
+    overflow: "hidden",
+    background: "linear-gradient(160deg, var(--stone-a), var(--stone-b))",
+    border: "1px solid var(--line)",
   },
-  cardValue: {
+  search: {
+    width: "100%",
+    marginTop: 16,
+    padding: "12px 16px",
     fontSize: 16,
-    margin: "6px 0 0",
+    color: "var(--ink)",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
+    borderRadius: "var(--radius)",
   },
   count: {
-    fontFamily: "'Courier New', monospace",
+    fontFamily: "var(--font-sans)",
     fontSize: 14,
-    color: "#5B7CAD",
-    marginTop: 48,
+    color: "var(--moss)",
+    marginTop: 32,
+  },
+  error: {
+    fontSize: "var(--text-base)",
+    color: "var(--mute)",
+    marginTop: 32,
+  },
+  chips: {
+    display: "flex",
+    gap: 8,
+    flexWrap: "wrap",
+    margin: "16px 0 24px",
+  },
+  chip: {
+    fontFamily: "inherit",
+    fontSize: 14,
+    padding: "8px 14px",
+    minHeight: "var(--control-min-height)",
+    cursor: "pointer",
+    color: "var(--ink)",
+    background: "transparent",
+    border: "1px solid var(--line)",
+    borderRadius: "var(--radius)",
+  },
+  chipActive: {
+    background: "var(--ink)",
+    color: "var(--bg)",
+    borderColor: "var(--ink)",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
+    gap: "1.5rem",
+  },
+  empty: {
+    padding: "2rem",
+    border: "1px dashed var(--line)",
+    color: "var(--mute)",
   },
   footer: {
     marginTop: 64,
     paddingTop: 24,
-    borderTop: "1px solid #DDDDDA",
+    borderTop: "1px solid var(--line)",
     fontSize: 13,
-    color: "#6B6B68",
+    color: "var(--mute)",
   },
 };
-function filterEntries(entries, query) {
-  const q = query.toLowerCase();
-  return entries.filter(
-    (entry) =>
-      entry.title.toLowerCase().includes(q) ||
-      entry.description.toLowerCase().includes(q) ||
-      (entry.titleKhmer && entry.titleKhmer.includes(q))
+function matchesQuery(entry, q) {
+  return (
+    entry.title.toLowerCase().includes(q) ||
+    entry.description.toLowerCase().includes(q) ||
+    (entry.titleKhmer && entry.titleKhmer.includes(q))
   );
 }
-// Map Supabase columns to the shapes EntryCard and the search expect.
+// Map Supabase columns to the shapes HomeGridCard and the search expect.
 function mapRow(row) {
   return {
     ...row,
@@ -81,6 +138,7 @@ function mapRow(row) {
 }
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
   // status is "loading" while the first fetch is in flight, "error" if it
   // failed, and "ready" once the entries have arrived from Supabase.
   const [status, setStatus] = useState("loading");
@@ -110,69 +168,101 @@ export default function Home() {
     };
   }, []);
 
-  const visibleEntries = filterEntries(entries, query);
+  const lang = getLang();
+  const materials = [
+    "all",
+    ...new Set(entries.map((e) => e.material).filter(Boolean)),
+  ];
+  const q = query.toLowerCase();
+  const visibleEntries = entries.filter(
+    (entry) =>
+      (filter === "all" || entry.material === filter) &&
+      matchesQuery(entry, q)
+  );
+  const featured = entries.find((entry) => entry.image);
 
   return (
     <main style={styles.wrap}>
-      <p style={styles.kicker}>{t("home.kicker")}</p>
-      <h1 style={styles.title}>{collection.name}</h1>
-      <p style={styles.description}>{collection.description}</p>
-
-      <div style={styles.card}>
-        <p style={styles.cardLabel}>{t("home.curatedBy")}</p>
-        <p style={styles.cardValue}>{collection.curator}</p>
-      </div>
-      <div style={styles.card}>
-        <p style={styles.cardLabel}>{t("home.source")}</p>
-        <p style={styles.cardValue}>{collection.source}</p>
-      </div>
+      <section style={styles.hero}>
+        <div>
+          <p style={styles.kicker}>{t("home.kicker", lang)}</p>
+          <h1 style={styles.title}>{collection.name}</h1>
+          <p style={styles.intro}>{collection.description}</p>
+          <p style={styles.creditLine}>
+            <strong>{t("home.curatedBy", lang)}</strong> {collection.curator}
+          </p>
+          <p style={styles.creditLine}>
+            <strong>{t("home.source", lang)}</strong> {collection.source}
+          </p>
+        </div>
+        <div style={styles.arch}>
+          {featured && (
+            <Image
+              src={featured.image}
+              alt={featured.title}
+              fill
+              sizes="(min-width: 768px) 40vw, 92vw"
+              style={{ objectFit: "cover" }}
+            />
+          )}
+        </div>
+      </section>
 
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder={t("home.searchPlaceholder")}
-        style={{
-          width: "100%",
-          marginTop: 48,
-          padding: "12px 16px",
-          fontSize: 16,
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #DDDDDA",
-          borderRadius: 8,
-          color: "#242426",
-        }}
+        placeholder={t("home.searchPlaceholder", lang)}
+        style={styles.search}
       />
 
       {status === "loading" ? (
-        <p style={styles.count}>{t("home.loading")}</p>
+        <p style={styles.count}>{t("home.loading", lang)}</p>
       ) : status === "error" ? (
-        <p style={styles.description}>
-          {t("home.error")}
-        </p>
+        <p style={styles.error}>{t("home.error", lang)}</p>
       ) : (
         <>
           <p style={styles.count}>
-            {t("home.count", {
+            {t("home.count", lang, {
               shown: visibleEntries.length,
               total: entries.length,
             })}
           </p>
+
+          <div style={styles.chips}>
+            {materials.map((material) => {
+              const active = filter === material;
+              return (
+                <button
+                  key={material}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setFilter(material)}
+                  style={
+                    active
+                      ? { ...styles.chip, ...styles.chipActive }
+                      : styles.chip
+                  }
+                >
+                  {material === "all" ? t("home.all", lang) : material}
+                </button>
+              );
+            })}
+          </div>
+
           {visibleEntries.length === 0 ? (
-            <p style={styles.description}>
-              {t("home.emptySearch")}
-            </p>
+            <div style={styles.empty}>{t("home.emptySearch", lang)}</div>
           ) : (
-            visibleEntries.map((entry, i) => (
-              <EntryCard key={entry.id} entry={entry} index={i} />
-            ))
+            <div style={styles.grid}>
+              {visibleEntries.map((entry) => (
+                <HomeGridCard key={entry.id} entry={entry} />
+              ))}
+            </div>
           )}
         </>
       )}
 
-      <footer style={styles.footer}>
-        {t("home.footer")}
-      </footer>
+      <footer style={styles.footer}>{t("home.footer", lang)}</footer>
     </main>
   );
 }

@@ -2,6 +2,8 @@ import collection from "../collection.config.js";
 import { createClient } from "../utils/supabase/server.js";
 import { logout } from "../app/logout/actions.js";
 import { t } from "../utils/i18n.js";
+import { serverLang } from "../utils/server-lang.js";
+import LanguageToggle from "./LanguageToggle.js";
 
 const styles = {
   header: {
@@ -41,6 +43,7 @@ const styles = {
 // Server component: reads the current user from the request cookies so the
 // header can show the right state (email + logout vs. login/signup links).
 export default async function SiteHeader() {
+  const lang = await serverLang();
   const supabase = await createClient();
   const {
     data: { user },
@@ -51,28 +54,31 @@ export default async function SiteHeader() {
       <a href="/" style={styles.brand}>
         {collection.name}
       </a>
-      {user ? (
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={styles.email}>{user.email}</span>
-          <a href="/my-entries" style={styles.link}>
-            {t("nav.myEntries")}
-          </a>
-          <form action={logout} style={{ margin: 0 }}>
-            <button type="submit" style={styles.logoutButton}>
-              {t("nav.logout")}
-            </button>
-          </form>
-        </div>
-      ) : (
-        <nav style={{ display: "flex", gap: 16 }}>
-          <a href="/login" style={styles.link}>
-            {t("nav.login")}
-          </a>
-          <a href="/signup" style={styles.link}>
-            {t("nav.signup")}
-          </a>
-        </nav>
-      )}
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        {user ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={styles.email}>{user.email}</span>
+            <a href="/my-entries" style={styles.link}>
+              {t("nav.myEntries", lang)}
+            </a>
+            <form action={logout} style={{ margin: 0 }}>
+              <button type="submit" style={styles.logoutButton}>
+                {t("nav.logout", lang)}
+              </button>
+            </form>
+          </div>
+        ) : (
+          <nav style={{ display: "flex", gap: 16 }}>
+            <a href="/login" style={styles.link}>
+              {t("nav.login", lang)}
+            </a>
+            <a href="/signup" style={styles.link}>
+              {t("nav.signup", lang)}
+            </a>
+          </nav>
+        )}
+        <LanguageToggle lang={lang} />
+      </div>
     </header>
   );
 }

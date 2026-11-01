@@ -7,5 +7,12 @@ const nextConfig = {
       bodySizeLimit: "4mb",
     },
   },
+  images: {
+    remotePatterns: [
+      // Contributed photos live in Supabase Storage and render on the home
+      // hero/grid through next/image.
+      { protocol: "https", hostname: "ilcbvlrqhkoynqnlyhus.supabase.co" },
+    ],
+  },
 };
 export default nextConfig;

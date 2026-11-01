@@ -22,9 +22,8 @@ export function trimText(formData, name) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-export function validateTexts(values) {
+export function validateTexts(values, lang = getLang()) {
   const errors = {};
-  const lang = getLang();
   for (const rule of FIELD_RULES) {
     const text = values[rule.name] ?? "";
     if (text.length < rule.min || text.length > rule.max) {
@@ -53,17 +52,17 @@ export function validateTexts(values) {
 
 // Client-side photo checks only. The server repeats these (plus a real file
 // signature check) because anything the client sends can be forged.
-export function validatePhotoClient(file) {
+export function validatePhotoClient(file, lang = getLang()) {
   if (!file || file.size === 0) {
-    return t("errors.photoRequired");
+    return t("errors.photoRequired", lang);
   }
   if (file.size > MAX_PHOTO_BYTES) {
-    return t("errors.photoSize");
+    return t("errors.photoSize", lang);
   }
   const okType = ALLOWED_PHOTO_TYPES.includes(file.type);
   const okExt = /\.(jpe?g|png|webp)$/i.test(file.name || "");
   if (!okType && !okExt) {
-    return t("errors.photoType");
+    return t("errors.photoType", lang);
   }
   return null;
 }

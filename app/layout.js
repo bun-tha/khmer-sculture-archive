@@ -5,6 +5,7 @@ import {
   Noto_Sans_Khmer,
   Noto_Serif_Khmer,
 } from "next/font/google";
+import { cookies } from "next/headers";
 import collection from "../collection.config.js";
 import SiteHeader from "../components/SiteHeader.js";
 
@@ -43,9 +44,12 @@ export const metadata = {
   description: collection.description,
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get("lang")?.value === "km" ? "km" : "en";
+
   return (
-    <html lang="en" className={fontClasses}>
+    <html lang={lang} className={fontClasses}>
       <body
         style={{
           margin: 0,

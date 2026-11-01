@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../utils/supabase/server.js";
 import { t } from "../../utils/i18n.js";
+import { serverLang } from "../../utils/server-lang.js";
 import {
   FIELD_RULES,
   MAX_PHOTO_BYTES,
@@ -23,10 +24,10 @@ const PHOTO_TYPES = {
   "image/webp": { ext: "webp", signature: [0x52, 0x49, 0x46, 0x46] },
 };
 
-async function checkPhotoContent(photo) {
+async function checkPhotoContent(photo, lang) {
   const spec = PHOTO_TYPES[photo.type];
   if (!spec) {
-    return { error: t("errors.photoType") };
+    return { error: t("errors.photoType", lang) };
   }
   const bytes = new Uint8Array(await photo.arrayBuffer());
   const signatureOk = spec.signature.every((byte, i) => bytes[i] === byte);
@@ -37,33 +38,33 @@ async function checkPhotoContent(photo) {
       bytes[10] === 0x42 &&
       bytes[11] === 0x50);
   if (!signatureOk || !webpOk) {
-    return { error: t("errors.photoLooksWrong") };
+    return { error: t("errors.photoLooksWrong", lang) };
   }
   return { ext: spec.ext };
 }
 
 // Trim every text field and validate the lengths. Shared by create and update
 // so the two forms behave identically.
-function trimmedFields(formData) {
+function trimmedFields(formData, lang) {
   const values = {};
   for (const rule of FIELD_RULES) {
     values[rule.name] = trimText(formData, rule.name);
   }
-  return { values, fieldErrors: validateTexts(values) };
+  return { values, fieldErrors: validateTexts(values, lang) };
 }
 
 // Uploads a photo to <user id>/<random uuid>.<ext> in the photos bucket and
 // returns its public URL. The filename is generated, never taken from the
 // user's original filename. Callers validate type, size, and signature first
 // (with checkPhotoContent) so the upload only ever runs on a good file.
-async function uploadPhoto(supabase, userId, photo, ext) {
+async function uploadPhoto(supabase, userId, photo, ext, lang) {
   const photoPath = `${userId}/${crypto.randomUUID()}.${ext}`;
   const { error: uploadError } = await supabase.storage
     .from("photos")
     .upload(photoPath, photo, { contentType: photo.type });
   if (uploadError) {
     console.error("contribute: photo upload failed:", uploadError);
-    return { error: t("errors.photoUploadFailed") };
+    return { error: t("errors.photoUploadFailed", lang) };
   }
   const { data: urlData } = supabase.storage
     .from("photos")
@@ -73,29 +74,30 @@ async function uploadPhoto(supabase, userId, photo, ext) {
 
 export async function submitEntry(prevState, formData) {
   const supabase = await createClient();
+  const lang = await serverLang();
 
   // Owner always comes from the session, never from the form.
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { formError: t("errors.notSignedIn") };
+    return { formError: t("errors.notSignedIn", lang) };
   }
 
   // Trim every text field, then re-validate on the server (never trust the
   // client's checks alone).
-  const { values, fieldErrors } = trimmedFields(formData);
+  const { values, fieldErrors } = trimmedFields(formData, lang);
 
   // Validate the photo (required, size, type, and file signature) WITHOUT
   // uploading yet. The upload only happens once every check has passed.
   const photo = formData.get("photo");
   let photoExt = null;
   if (!photo || photo.size === 0) {
-    fieldErrors.photo = t("errors.photoRequired");
+    fieldErrors.photo = t("errors.photoRequired", lang);
   } else if (photo.size > MAX_PHOTO_BYTES) {
-    fieldErrors.photo = t("errors.photoSize");
+    fieldErrors.photo = t("errors.photoSize", lang);
   } else {
-    const checked = await checkPhotoContent(photo);
+    const checked = await checkPhotoContent(photo, lang);
     if (checked.error) {
       fieldErrors.photo = checked.error;
     } else {
@@ -107,7 +109,7 @@ export async function submitEntry(prevState, formData) {
     return { fieldErrors };
   }
 
-  const uploaded = await uploadPhoto(supabase, user.id, photo, photoExt);
+  const uploaded = await uploadPhoto(supabase, user.id, photo, photoExt, lang);
   if (uploaded.error) {
     return { fieldErrors: { photo: uploaded.error } };
   }
@@ -142,7 +144,7 @@ export async function submitEntry(prevState, formData) {
       .from("photos")
       .remove([uploaded.photoPath])
       .catch(() => {});
-    return { formError: t("errors.entryNotSaved") };
+    return { formError: t("errors.entryNotSaved", lang) };
   }
 
   // New entries wait for review, so there is no entry page to visit yet.
@@ -153,17 +155,18 @@ export async function submitEntry(prevState, formData) {
 
 export async function updateEntry(prevState, formData) {
   const supabase = await createClient();
+  const lang = await serverLang();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { formError: t("errors.notSignedIn") };
+    return { formError: t("errors.notSignedIn", lang) };
   }
 
   const id = String(formData.get("id") ?? "").trim();
   if (!id) {
-    return { formError: t("errors.entryNotFound") };
+    return { formError: t("errors.entryNotFound", lang) };
   }
 
   // Only the owner may update this entry.
@@ -174,14 +177,14 @@ export async function updateEntry(prevState, formData) {
     .maybeSingle();
   if (fetchError || !existing) {
     console.error("contribute: entry fetch for update failed:", fetchError);
-    return { formError: t("errors.entryNotFound") };
+    return { formError: t("errors.entryNotFound", lang) };
   }
   if (existing.owner !== user.id) {
     console.error("contribute: update forbidden — owner mismatch");
-    return { formError: t("errors.ownEntriesOnly") };
+    return { formError: t("errors.ownEntriesOnly", lang) };
   }
 
-  const { values, fieldErrors } = trimmedFields(formData);
+  const { values, fieldErrors } = trimmedFields(formData, lang);
 
   // Photo is optional when editing: if a new file was chosen, validate its
   // size, type, and signature now but do NOT upload yet.
@@ -189,9 +192,9 @@ export async function updateEntry(prevState, formData) {
   let photoExt = null;
   if (photo && photo.size > 0) {
     if (photo.size > MAX_PHOTO_BYTES) {
-      fieldErrors.photo = t("errors.photoSize");
+      fieldErrors.photo = t("errors.photoSize", lang);
     } else {
-      const checked = await checkPhotoContent(photo);
+      const checked = await checkPhotoContent(photo, lang);
       if (checked.error) {
         fieldErrors.photo = checked.error;
       } else {
@@ -209,7 +212,7 @@ export async function updateEntry(prevState, formData) {
   let photoUrl = existing.photo_url;
   let uploaded = null;
   if (photoExt) {
-    uploaded = await uploadPhoto(supabase, user.id, photo, photoExt);
+    uploaded = await uploadPhoto(supabase, user.id, photo, photoExt, lang);
     if (uploaded.error) {
       return { fieldErrors: { photo: uploaded.error } };
     }
@@ -252,7 +255,7 @@ export async function updateEntry(prevState, formData) {
         .remove([uploaded.photoPath])
         .catch(() => {});
     }
-    return { formError: t("errors.changeNotSaved") };
+    return { formError: t("errors.changeNotSaved", lang) };
   }
 
   redirect(`/entries/${updated.id}`);
@@ -260,17 +263,18 @@ export async function updateEntry(prevState, formData) {
 
 export async function deleteEntry(prevState, formData) {
   const supabase = await createClient();
+  const lang = await serverLang();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { formError: t("errors.notSignedIn") };
+    return { formError: t("errors.notSignedIn", lang) };
   }
 
   const id = String(formData.get("id") ?? "").trim();
   if (!id) {
-    return { formError: t("errors.entryNotFound") };
+    return { formError: t("errors.entryNotFound", lang) };
   }
 
   // DELETE ... and verify that a row actually came back.
@@ -284,7 +288,7 @@ export async function deleteEntry(prevState, formData) {
 
   if (deleteError || !deleted) {
     console.error("contribute: entry delete failed:", deleteError);
-    return { formError: t("errors.changeNotSaved") };
+    return { formError: t("errors.changeNotSaved", lang) };
   }
 
   redirect("/");
