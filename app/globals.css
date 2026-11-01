@@ -112,3 +112,16 @@ a {
     animation: none;
   }
 }
+
+/* Entry detail: two columns on wide screens, stacked on small ones. */
+.entry-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+@media (min-width: 880px) {
+  .entry-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}

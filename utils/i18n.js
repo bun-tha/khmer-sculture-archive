@@ -87,6 +87,12 @@ export const strings = {
     entry: {
       contributedBy: "Contributed by {name}",
       back: "← Back to the archive",
+      notFound: "This entry is not part of the archive.",
+      error: "This entry could not be loaded. Check your connection and try again.",
+      related: "Related entries",
+      story: "Story",
+      zoomIn: "Zoom in",
+      zoomOut: "Zoom out",
     },
     actions: {
       edit: "Edit",
@@ -200,6 +206,12 @@ export const strings = {
     entry: {
       contributedBy: "រួមចំណែកដោយ {name}",
       back: "← ត្រឡប់ទៅប័ណ្ណសារ",
+      notFound: "",
+      error: "",
+      related: "អត្ថបទពាក់ព័ន្ធ",
+      story: "រឿង",
+      zoomIn: "ពង្រីក",
+      zoomOut: "បង្រួម",
     },
     actions: {
       edit: "កែសម្រួល",
