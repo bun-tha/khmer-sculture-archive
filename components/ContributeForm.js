@@ -9,6 +9,7 @@ import {
   validateTexts,
 } from "../app/contribute/validation.js";
 import authStyles from "../app/authStyles.js";
+import { t } from "../utils/i18n.js";
 
 const formStyles = {
   form: {
@@ -85,11 +86,10 @@ export default function ContributeForm({ entry }) {
     return (
       <div style={formStyles.success}>
         <p style={formStyles.successText}>
-          Thank you! Your entry was received and is waiting for review. It
-          will appear in the archive once approved. / អរគុណ! ការបញ្ជូនរបស់អ្នកត្រូវបានទទួលហើយ ហើយកំពុងរង់ចាំការត្រួតពិនិត្យ។ វានឹងបង្ហាញក្នុងប័ណ្ណសារនៅពេលត្រូវបានអនុម័ត។
+          {t("form.success")} {t("form.success", "km")}
         </p>
         <a href="/my-entries" style={formStyles.successLink}>
-          See your entries
+          {t("form.seeEntries")}
         </a>
       </div>
     );
@@ -154,7 +154,7 @@ export default function ContributeForm({ entry }) {
       {FIELD_RULES.map((rule) => (
         <div key={rule.name}>
           <label htmlFor={rule.name} style={authStyles.cardLabel}>
-            {rule.label.toUpperCase()} — {rule.labelKm}
+            {t(rule.labelKey).toUpperCase()} — {t(rule.labelKey, "km")}
           </label>
           {rule.name === "description" ? (
             <textarea
@@ -180,7 +180,7 @@ export default function ContributeForm({ entry }) {
       ))}
 
       <label htmlFor="photo" style={authStyles.cardLabel}>
-        PHOTO — រូបថត (JPEG, PNG, OR WEBP — MAX 4 MB)
+        {t("field.photo").toUpperCase()} — {t("field.photo", "km")} (JPEG, PNG, OR WEBP — MAX 4 MB)
       </label>
       <input
         id="photo"
@@ -191,7 +191,7 @@ export default function ContributeForm({ entry }) {
       />
       {entry && (
         <p style={formStyles.photoHint}>
-          Leave the photo empty to keep the current one.
+          {t("form.photoHint")}
         </p>
       )}
       {fieldError("photo") && (
@@ -207,7 +207,11 @@ export default function ContributeForm({ entry }) {
             : authStyles.button
         }
       >
-        {pending ? "Saving…" : entry ? "Save changes" : "Add entry"}
+        {pending
+          ? t("form.saving")
+          : entry
+            ? t("form.save")
+            : t("form.submit")}
       </button>
     </form>
   );

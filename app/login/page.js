@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "../../utils/supabase/server.js";
 import { login } from "./actions.js";
 import authStyles from "../authStyles.js";
+import { t } from "../../utils/i18n.js";
 
 export default async function LoginPage({ searchParams }) {
   const sp = await searchParams;
@@ -18,25 +19,24 @@ export default async function LoginPage({ searchParams }) {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>KHMER LIVING ARCHIVE</p>
-      <h1 style={authStyles.title}>Log in</h1>
+      <p style={authStyles.kicker}>{t("home.kicker")}</p>
+      <h1 style={authStyles.title}>{t("login.title")}</h1>
       <p style={authStyles.description}>
-        Log in to contribute entries to the archive.
+        {t("login.description")}
       </p>
 
       {sp.error !== undefined && (
-        <p style={authStyles.notice}>Invalid email or password</p>
+        <p style={authStyles.notice}>{t("login.invalid")}</p>
       )}
       {sp.check !== undefined && (
         <p style={authStyles.notice}>
-          Account created — check your email for a confirmation link, then log
-          in.
+          {t("login.checkEmail")}
         </p>
       )}
 
       <form action={login} style={authStyles.card}>
         <label style={authStyles.cardLabel} htmlFor="email">
-          EMAIL
+          {t("field.email").toUpperCase()}
         </label>
         <input
           id="email"
@@ -48,7 +48,7 @@ export default async function LoginPage({ searchParams }) {
         />
 
         <label style={authStyles.cardLabel} htmlFor="password">
-          PASSWORD
+          {t("field.password").toUpperCase()}
         </label>
         <input
           id="password"
@@ -60,12 +60,13 @@ export default async function LoginPage({ searchParams }) {
         />
 
         <button type="submit" style={authStyles.button}>
-          Log in
+          {t("login.title")}
         </button>
       </form>
 
       <p style={authStyles.footer}>
-        New here? <a href="/signup" style={authStyles.link}>Create an account</a>.
+        {t("login.newHere")}{" "}
+        <a href="/signup" style={authStyles.link}>{t("login.createAccount")}</a>.
       </p>
     </main>
   );

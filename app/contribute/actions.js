@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "../../utils/supabase/server.js";
+import { t } from "../../utils/i18n.js";
 import {
   FIELD_RULES,
   MAX_PHOTO_BYTES,
@@ -25,7 +26,7 @@ const PHOTO_TYPES = {
 async function checkPhotoContent(photo) {
   const spec = PHOTO_TYPES[photo.type];
   if (!spec) {
-    return { error: "Photo must be a jpeg, png, or webp image." };
+    return { error: t("errors.photoType") };
   }
   const bytes = new Uint8Array(await photo.arrayBuffer());
   const signatureOk = spec.signature.every((byte, i) => bytes[i] === byte);
@@ -36,9 +37,7 @@ async function checkPhotoContent(photo) {
       bytes[10] === 0x42 &&
       bytes[11] === 0x50);
   if (!signatureOk || !webpOk) {
-    return {
-      error: "That file does not look like a photo — use a jpeg, png, or webp image.",
-    };
+    return { error: t("errors.photoLooksWrong") };
   }
   return { ext: spec.ext };
 }
@@ -64,7 +63,7 @@ async function uploadPhoto(supabase, userId, photo, ext) {
     .upload(photoPath, photo, { contentType: photo.type });
   if (uploadError) {
     console.error("contribute: photo upload failed:", uploadError);
-    return { error: "Your photo could not be uploaded — please try again." };
+    return { error: t("errors.photoUploadFailed") };
   }
   const { data: urlData } = supabase.storage
     .from("photos")
@@ -80,7 +79,7 @@ export async function submitEntry(prevState, formData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { formError: "Your session is not signed in — log in and try again." };
+    return { formError: t("errors.notSignedIn") };
   }
 
   // Trim every text field, then re-validate on the server (never trust the
@@ -92,9 +91,9 @@ export async function submitEntry(prevState, formData) {
   const photo = formData.get("photo");
   let photoExt = null;
   if (!photo || photo.size === 0) {
-    fieldErrors.photo = "Choose a photo (jpeg, png, or webp, max 4 MB).";
+    fieldErrors.photo = t("errors.photoRequired");
   } else if (photo.size > MAX_PHOTO_BYTES) {
-    fieldErrors.photo = "Photo must be 4 MB or smaller.";
+    fieldErrors.photo = t("errors.photoSize");
   } else {
     const checked = await checkPhotoContent(photo);
     if (checked.error) {
@@ -143,7 +142,7 @@ export async function submitEntry(prevState, formData) {
       .from("photos")
       .remove([uploaded.photoPath])
       .catch(() => {});
-    return { formError: "Your entry could not be saved — please try again." };
+    return { formError: t("errors.entryNotSaved") };
   }
 
   // New entries wait for review, so there is no entry page to visit yet.
@@ -159,12 +158,12 @@ export async function updateEntry(prevState, formData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { formError: "Your session is not signed in — log in and try again." };
+    return { formError: t("errors.notSignedIn") };
   }
 
   const id = String(formData.get("id") ?? "").trim();
   if (!id) {
-    return { formError: "That entry could not be found." };
+    return { formError: t("errors.entryNotFound") };
   }
 
   // Only the owner may update this entry.
@@ -175,11 +174,11 @@ export async function updateEntry(prevState, formData) {
     .maybeSingle();
   if (fetchError || !existing) {
     console.error("contribute: entry fetch for update failed:", fetchError);
-    return { formError: "That entry could not be found." };
+    return { formError: t("errors.entryNotFound") };
   }
   if (existing.owner !== user.id) {
     console.error("contribute: update forbidden — owner mismatch");
-    return { formError: "You can only edit your own entries." };
+    return { formError: t("errors.ownEntriesOnly") };
   }
 
   const { values, fieldErrors } = trimmedFields(formData);
@@ -190,7 +189,7 @@ export async function updateEntry(prevState, formData) {
   let photoExt = null;
   if (photo && photo.size > 0) {
     if (photo.size > MAX_PHOTO_BYTES) {
-      fieldErrors.photo = "Photo must be 4 MB or smaller.";
+      fieldErrors.photo = t("errors.photoSize");
     } else {
       const checked = await checkPhotoContent(photo);
       if (checked.error) {
@@ -253,7 +252,7 @@ export async function updateEntry(prevState, formData) {
         .remove([uploaded.photoPath])
         .catch(() => {});
     }
-    return { formError: "That change wasn't saved" };
+    return { formError: t("errors.changeNotSaved") };
   }
 
   redirect(`/entries/${updated.id}`);
@@ -266,12 +265,12 @@ export async function deleteEntry(prevState, formData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { formError: "Your session is not signed in — log in and try again." };
+    return { formError: t("errors.notSignedIn") };
   }
 
   const id = String(formData.get("id") ?? "").trim();
   if (!id) {
-    return { formError: "That entry could not be found." };
+    return { formError: t("errors.entryNotFound") };
   }
 
   // DELETE ... and verify that a row actually came back.
@@ -285,7 +284,7 @@ export async function deleteEntry(prevState, formData) {
 
   if (deleteError || !deleted) {
     console.error("contribute: entry delete failed:", deleteError);
-    return { formError: "That change wasn't saved" };
+    return { formError: t("errors.changeNotSaved") };
   }
 
   redirect("/");

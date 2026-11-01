@@ -1,6 +1,7 @@
 import collection from "../collection.config.js";
 import { createClient } from "../utils/supabase/server.js";
 import { logout } from "../app/logout/actions.js";
+import { t } from "../utils/i18n.js";
 
 const styles = {
   header: {
@@ -54,21 +55,21 @@ export default async function SiteHeader() {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span style={styles.email}>{user.email}</span>
           <a href="/my-entries" style={styles.link}>
-            My entries
+            {t("nav.myEntries")}
           </a>
           <form action={logout} style={{ margin: 0 }}>
             <button type="submit" style={styles.logoutButton}>
-              Log out
+              {t("nav.logout")}
             </button>
           </form>
         </div>
       ) : (
         <nav style={{ display: "flex", gap: 16 }}>
           <a href="/login" style={styles.link}>
-            Log in
+            {t("nav.login")}
           </a>
           <a href="/signup" style={styles.link}>
-            Sign up
+            {t("nav.signup")}
           </a>
         </nav>
       )}

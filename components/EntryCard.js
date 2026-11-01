@@ -1,3 +1,5 @@
+import { t } from "../utils/i18n.js";
+
 const styles = {
   card: {
     padding: "14px 0",
@@ -90,7 +92,7 @@ export default function EntryCard({ entry, index }) {
           <p style={styles.meta}>{meta}</p>
           {entry.contributor_name && (
             <p style={styles.credit}>
-              Contributed by {entry.contributor_name}
+              {t("entry.contributedBy", { name: entry.contributor_name })}
             </p>
           )}
         </div>

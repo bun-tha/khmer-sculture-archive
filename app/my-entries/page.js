@@ -1,4 +1,5 @@
 import { createClient } from "../../utils/supabase/server.js";
+import { t, t2 } from "../../utils/i18n.js";
 import authStyles from "../authStyles.js";
 
 const styles = {
@@ -39,9 +40,9 @@ const styles = {
 };
 
 const STATUS_LABELS = {
-  pending: "Waiting for review / កំពុងរង់ចាំការត្រួតពិនិត្យ",
-  published: "Published / បានផ្សព្វផ្សាយ",
-  returned: "Returned for changes / ត្រឡប់មកវិញដើម្បីកែសម្រួល",
+  pending: t2("my.status.pending"),
+  published: t2("my.status.published"),
+  returned: t2("my.status.returned"),
 };
 
 // Logged-in users only: lists the user's own entries with their status, and
@@ -56,11 +57,12 @@ export default async function MyEntriesPage() {
   if (!user) {
     return (
       <main style={authStyles.wrap}>
-        <p style={authStyles.kicker}>KHMER LIVING ARCHIVE</p>
-        <h1 style={authStyles.title}>My entries</h1>
+        <p style={authStyles.kicker}>{t("home.kicker")}</p>
+        <h1 style={authStyles.title}>{t("my.title")}</h1>
         <p style={authStyles.description}>
-          You need to <a href="/login" style={authStyles.link}>log in</a> to
-          see your entries.
+          {t("my.needLoginPre")}{" "}
+          <a href="/login" style={authStyles.link}>{t("nav.login")}</a>{" "}
+          {t("my.needLoginPost")}
         </p>
       </main>
     );
@@ -76,17 +78,19 @@ export default async function MyEntriesPage() {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>KHMER LIVING ARCHIVE</p>
-      <h1 style={authStyles.title}>My entries</h1>
+      <p style={authStyles.kicker}>{t("home.kicker")}</p>
+      <h1 style={authStyles.title}>{t("my.title")}</h1>
       <p style={authStyles.description}>
-        {myEntries.length} {myEntries.length === 1 ? "entry" : "entries"} —{" "}
-        {user.email}
+        {t(
+          myEntries.length === 1 ? "my.countOne" : "my.count",
+          { n: myEntries.length }
+        )} — {user.email}
       </p>
 
       {myEntries.length === 0 ? (
         <p style={authStyles.description}>
-          You have not added anything yet.{" "}
-          <a href="/contribute" style={authStyles.link}>Contribute</a>.
+          {t("my.empty")}{" "}
+          <a href="/contribute" style={authStyles.link}>{t("my.contributeLink")}</a>.
         </p>
       ) : (
         myEntries.map((entry) => (
@@ -100,7 +104,7 @@ export default async function MyEntriesPage() {
                 {STATUS_LABELS[entry.status] ?? entry.status}
               </p>
               <a href={`/entries/${entry.id}/edit`} style={styles.editLink}>
-                Edit
+                {t("actions.edit")}
               </a>
             </div>
           </div>

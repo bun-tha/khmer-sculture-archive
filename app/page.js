@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import collection from "../collection.config.js";
 import EntryCard from "../components/EntryCard.js";
 import { createClient } from "../utils/supabase/client.js";
+import { t } from "../utils/i18n.js";
 
 const styles = {
   wrap: {
@@ -113,16 +114,16 @@ export default function Home() {
 
   return (
     <main style={styles.wrap}>
-      <p style={styles.kicker}>KHMER LIVING ARCHIVE</p>
+      <p style={styles.kicker}>{t("home.kicker")}</p>
       <h1 style={styles.title}>{collection.name}</h1>
       <p style={styles.description}>{collection.description}</p>
 
       <div style={styles.card}>
-        <p style={styles.cardLabel}>CURATED BY</p>
+        <p style={styles.cardLabel}>{t("home.curatedBy")}</p>
         <p style={styles.cardValue}>{collection.curator}</p>
       </div>
       <div style={styles.card}>
-        <p style={styles.cardLabel}>SOURCE</p>
+        <p style={styles.cardLabel}>{t("home.source")}</p>
         <p style={styles.cardValue}>{collection.source}</p>
       </div>
 
@@ -130,7 +131,7 @@ export default function Home() {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search the archive..."
+        placeholder={t("home.searchPlaceholder")}
         style={{
           width: "100%",
           marginTop: 48,
@@ -144,20 +145,22 @@ export default function Home() {
       />
 
       {status === "loading" ? (
-        <p style={styles.count}>Loading the archive…</p>
+        <p style={styles.count}>{t("home.loading")}</p>
       ) : status === "error" ? (
         <p style={styles.description}>
-          The archive is unreachable right now — try again in a moment.
+          {t("home.error")}
         </p>
       ) : (
         <>
           <p style={styles.count}>
-            showing {visibleEntries.length} of {entries.length} entries
+            {t("home.count", {
+              shown: visibleEntries.length,
+              total: entries.length,
+            })}
           </p>
           {visibleEntries.length === 0 ? (
             <p style={styles.description}>
-              Nothing carved from that search yet — try a shorter word, or
-              clear the box to see everything.
+              {t("home.emptySearch")}
             </p>
           ) : (
             visibleEntries.map((entry, i) => (
@@ -168,9 +171,7 @@ export default function Home() {
       )}
 
       <footer style={styles.footer}>
-        Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall
-        2026. This archive is under construction all semester. Come back in
-        December.
+        {t("home.footer")}
       </footer>
     </main>
   );

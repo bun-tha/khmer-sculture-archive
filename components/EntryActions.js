@@ -2,6 +2,7 @@
 
 import { useState, useActionState } from "react";
 import { deleteEntry } from "../app/contribute/actions.js";
+import { t } from "../utils/i18n.js";
 
 const styles = {
   row: {
@@ -69,7 +70,7 @@ export default function EntryActions({ id }) {
     return (
       <div style={styles.confirm}>
         <p style={styles.confirmText}>
-          Delete this entry? This cannot be undone.
+          {t("actions.confirm")}
         </p>
         {state?.formError && <p style={styles.notice}>{state.formError}</p>}
         <form
@@ -82,10 +83,10 @@ export default function EntryActions({ id }) {
             disabled={pending}
             style={pending ? { ...styles.danger, ...styles.disabled } : styles.danger}
           >
-            {pending ? "Deleting…" : "Delete"}
+            {pending ? t("actions.deleting") : t("actions.delete")}
           </button>
           <button type="button" onClick={() => setConfirming(false)} style={styles.button}>
-            Cancel
+            {t("actions.cancel")}
           </button>
         </form>
       </div>
@@ -95,10 +96,10 @@ export default function EntryActions({ id }) {
   return (
     <div style={styles.row}>
       <a href={`/entries/${id}/edit`} style={styles.link}>
-        Edit
+        {t("actions.edit")}
       </a>
       <button type="button" onClick={() => setConfirming(true)} style={styles.button}>
-        Delete
+        {t("actions.delete")}
       </button>
     </div>
   );

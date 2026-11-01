@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import EntryCard from "../../../components/EntryCard.js";
 import EntryActions from "../../../components/EntryActions.js";
 import { createClient } from "../../../utils/supabase/server.js";
+import { t } from "../../../utils/i18n.js";
 
 const styles = {
   wrap: {
@@ -55,9 +56,9 @@ export default async function EntryPage({ params }) {
 
   return (
     <main style={styles.wrap}>
-      <p style={styles.kicker}>KHMER LIVING ARCHIVE</p>
+      <p style={styles.kicker}>{t("home.kicker")}</p>
       <a href="/" style={styles.back}>
-        ← Back to the archive
+        {t("entry.back")}
       </a>
       <EntryCard entry={mapRow(entry)} index={0} />
       {canEdit && <EntryActions id={entry.id} />}

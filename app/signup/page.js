@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "../../utils/supabase/server.js";
 import { signUp } from "./actions.js";
 import authStyles from "../authStyles.js";
+import { t } from "../../utils/i18n.js";
 
 export default async function SignupPage({ searchParams }) {
   const sp = await searchParams;
@@ -18,21 +19,21 @@ export default async function SignupPage({ searchParams }) {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>KHMER LIVING ARCHIVE</p>
-      <h1 style={authStyles.title}>Create an account</h1>
+      <p style={authStyles.kicker}>{t("home.kicker")}</p>
+      <h1 style={authStyles.title}>{t("signup.title")}</h1>
       <p style={authStyles.description}>
-        Sign up to contribute entries to the archive.
+        {t("signup.description")}
       </p>
 
       {sp.error !== undefined && (
         <p style={authStyles.notice}>
-          That account could not be created — try again.
+          {t("signup.error")}
         </p>
       )}
 
       <form action={signUp} style={authStyles.card}>
         <label style={authStyles.cardLabel} htmlFor="email">
-          EMAIL
+          {t("field.email").toUpperCase()}
         </label>
         <input
           id="email"
@@ -44,7 +45,7 @@ export default async function SignupPage({ searchParams }) {
         />
 
         <label style={authStyles.cardLabel} htmlFor="password">
-          PASSWORD
+          {t("field.password").toUpperCase()}
         </label>
         <input
           id="password"
@@ -57,13 +58,13 @@ export default async function SignupPage({ searchParams }) {
         />
 
         <button type="submit" style={authStyles.button}>
-          Create account
+          {t("signup.title")}
         </button>
       </form>
 
       <p style={authStyles.footer}>
-        Already have an account?{" "}
-        <a href="/login" style={authStyles.link}>Log in</a>.
+        {t("signup.hasAccount")}{" "}
+        <a href="/login" style={authStyles.link}>{t("nav.login")}</a>.
       </p>
     </main>
   );

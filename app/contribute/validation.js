@@ -2,35 +2,19 @@
 // form (instant feedback before submit) and the server action (the real
 // gate). Plain JS on purpose — no "use client" / "use server".
 
+import { getLang, t } from "../../utils/i18n.js";
+
 export const MAX_PHOTO_BYTES = 4 * 1024 * 1024;
 export const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export const FIELD_RULES = [
-  { name: "title", label: "Title", labelKm: "ចំណងជើង", min: 1, max: 120 },
-  {
-    name: "title_km",
-    label: "Khmer title",
-    labelKm: "ចំណងជើងជាភាសាខ្មែរ",
-    min: 1,
-    max: 120,
-  },
-  {
-    name: "description",
-    label: "Description",
-    labelKm: "ការពិពណ៌នា",
-    min: 20,
-    max: 2000,
-  },
-  { name: "location", label: "Location", labelKm: "ទីតាំង", min: 1, max: 200 },
-  { name: "source", label: "Source", labelKm: "ប្រភព", min: 1, max: 200 },
-  {
-    name: "material",
-    label: "Material",
-    labelKm: "សម្ភារៈ",
-    min: 1,
-    max: 100,
-  },
-  { name: "period", label: "Period", labelKm: "សម័យកាល", min: 1, max: 100 },
+  { name: "title", labelKey: "field.title", min: 1, max: 120 },
+  { name: "title_km", labelKey: "field.titleKm", min: 1, max: 120 },
+  { name: "description", labelKey: "field.description", min: 20, max: 2000 },
+  { name: "location", labelKey: "field.location", min: 1, max: 200 },
+  { name: "source", labelKey: "field.source", min: 1, max: 200 },
+  { name: "material", labelKey: "field.material", min: 1, max: 100 },
+  { name: "period", labelKey: "field.period", min: 1, max: 100 },
 ];
 
 export function trimText(formData, name) {
@@ -40,22 +24,28 @@ export function trimText(formData, name) {
 
 export function validateTexts(values) {
   const errors = {};
+  const lang = getLang();
   for (const rule of FIELD_RULES) {
     const text = values[rule.name] ?? "";
     if (text.length < rule.min || text.length > rule.max) {
-      errors[rule.name] =
-        `${rule.label} must be ${rule.min}–${rule.max} characters.`;
+      errors[rule.name] = t("errors.length", lang, {
+        label: t(rule.labelKey, lang),
+        min: rule.min,
+        max: rule.max,
+      });
     }
   }
 
   // In addition to the length rule, the Khmer title must contain at least
   // one Khmer character (U+1780–U+17FF). When the length rule already failed
   // (empty or too short), keep its message; otherwise make sure the text is
-  // actually written in Khmer script, not just any 1–120 characters.
+  // actually written in Khmer script.
   const titleKm = values.title_km ?? "";
   if (!errors.title_km && !/[\u1780-\u17FF]/.test(titleKm)) {
     errors.title_km =
-      "The Khmer title must be written in Khmer script. ចំណងជើងត្រូវតែសរសេរជាអក្សរខ្មែរ។";
+      lang === "km"
+        ? t("errors.script", "km")
+        : `${t("errors.script", "en")} ${t("errors.script", "km")}`;
   }
 
   return errors;
@@ -65,15 +55,15 @@ export function validateTexts(values) {
 // signature check) because anything the client sends can be forged.
 export function validatePhotoClient(file) {
   if (!file || file.size === 0) {
-    return "Choose a photo (jpeg, png, or webp, max 4 MB).";
+    return t("errors.photoRequired");
   }
   if (file.size > MAX_PHOTO_BYTES) {
-    return "Photo must be 4 MB or smaller.";
+    return t("errors.photoSize");
   }
   const okType = ALLOWED_PHOTO_TYPES.includes(file.type);
   const okExt = /\.(jpe?g|png|webp)$/i.test(file.name || "");
   if (!okType && !okExt) {
-    return "Photo must be a jpeg, png, or webp image.";
+    return t("errors.photoType");
   }
   return null;
 }

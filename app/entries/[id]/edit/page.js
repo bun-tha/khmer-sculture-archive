@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import ContributeForm from "../../../../components/ContributeForm.js";
 import { createClient } from "../../../../utils/supabase/server.js";
 import authStyles from "../../../authStyles.js";
+import { t } from "../../../../utils/i18n.js";
 
 export default async function EditEntryPage({ params }) {
   const { id } = await params;
@@ -23,22 +24,23 @@ export default async function EditEntryPage({ params }) {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>KHMER LIVING ARCHIVE</p>
-      <h1 style={authStyles.title}>Edit entry</h1>
+      <p style={authStyles.kicker}>{t("home.kicker")}</p>
+      <h1 style={authStyles.title}>{t("editPage.title")}</h1>
 
       {!user ? (
         <p style={authStyles.description}>
-          You need to <a href="/login" style={authStyles.link}>log in</a>{" "}
-          to edit this entry.
+          {t("editPage.needLoginPre")}{" "}
+          <a href="/login" style={authStyles.link}>{t("nav.login")}</a>{" "}
+          {t("editPage.needLoginPost")}
         </p>
       ) : entry.owner !== user.id ? (
         <p style={authStyles.description}>
-          You can only edit your own entries.
+          {t("errors.ownEntriesOnly")}
         </p>
       ) : (
         <>
           <p style={authStyles.description}>
-            Update this entry. Fields left unchanged keep their values.
+            {t("editPage.description")}
           </p>
           <ContributeForm entry={entry} />
         </>

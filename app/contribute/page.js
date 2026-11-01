@@ -1,6 +1,7 @@
 import { createClient } from "../../utils/supabase/server.js";
 import ContributeForm from "../../components/ContributeForm.js";
 import authStyles from "../authStyles.js";
+import { t } from "../../utils/i18n.js";
 
 export default async function ContributePage() {
   const supabase = await createClient();
@@ -10,26 +11,27 @@ export default async function ContributePage() {
 
   return (
     <main style={authStyles.wrap}>
-      <p style={authStyles.kicker}>KHMER LIVING ARCHIVE</p>
-      <h1 style={authStyles.title}>Contribute</h1>
+      <p style={authStyles.kicker}>{t("home.kicker")}</p>
+      <h1 style={authStyles.title}>{t("contributePage.title")}</h1>
 
       {user ? (
         <>
           <p style={authStyles.description}>
-            Add a new entry to the archive. Every field is required.
+            {t("contributePage.description")}
           </p>
           <ContributeForm />
         </>
       ) : (
         <>
           <p style={authStyles.description}>
-            You need to <a href="/login" style={authStyles.link}>log in</a>{" "}
-            to add an entry to the archive.
+            {t("contributePage.needLoginPre")}{" "}
+            <a href="/login" style={authStyles.link}>{t("nav.login")}</a>{" "}
+            {t("contributePage.needLoginPost")}
           </p>
           <p style={authStyles.footer}>
-            No account yet?{" "}
+            {t("contributePage.noAccountYet")}{" "}
             <a href="/signup" style={authStyles.link}>
-              Create an account
+              {t("login.createAccount")}
             </a>
             .
           </p>
