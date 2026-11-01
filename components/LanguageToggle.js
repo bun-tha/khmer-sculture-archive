@@ -35,7 +35,7 @@ function toggleStyle(active) {
     fontFamily: "inherit",
     fontSize: 14,
     padding: "6px 10px",
-    minHeight: 36,
+    minHeight: 44,
     cursor: "pointer",
     border: "1px solid var(--line)",
     borderRadius: "var(--radius)",

@@ -6,13 +6,6 @@ import { serverLang } from "../utils/server-lang.js";
 import LanguageToggle from "./LanguageToggle.js";
 
 const styles = {
-  header: {
-    borderBottom: "1px solid #DDDDDA",
-    padding: "18px 24px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   brand: {
     fontFamily: "'Courier New', monospace",
     color: "#5B7CAD",
@@ -21,15 +14,28 @@ const styles = {
     textDecoration: "none",
   },
   email: {
+    display: "inline-block",
+    maxWidth: "min(40vw, 220px)",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    verticalAlign: "middle",
     fontSize: 14,
     color: "#6B6B68",
   },
   link: {
+    display: "inline-flex",
+    alignItems: "center",
+    minHeight: 44,
+    padding: "0 4px",
     fontSize: 14,
     color: "#5B7CAD",
     textDecoration: "none",
   },
   logoutButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    minHeight: 44,
     color: "#242426",
     backgroundColor: "#FFFFFF",
     border: "1px solid #DDDDDA",
@@ -50,11 +56,11 @@ export default async function SiteHeader() {
   } = await supabase.auth.getUser();
 
   return (
-    <header style={styles.header}>
+    <header className="site-header">
       <a href="/" style={styles.brand}>
         {collection.name}
       </a>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <div className="site-header-right">
         {user ? (
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={styles.email}>{user.email}</span>

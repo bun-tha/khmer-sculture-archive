@@ -13,13 +13,6 @@ const styles = {
     margin: "0 auto",
     padding: "0 clamp(1rem, 4vw, 3rem)",
   },
-  hero: {
-    display: "grid",
-    gridTemplateColumns: "1.1fr 0.9fr",
-    gap: "clamp(1.5rem, 5vw, 4rem)",
-    alignItems: "center",
-    padding: "clamp(2rem, 6vw, 4rem) 0",
-  },
   kicker: {
     fontFamily: "var(--font-sans)",
     fontWeight: 600,
@@ -208,7 +201,7 @@ export default function HomeClient({ lang }) {
 
   return (
     <main style={styles.wrap}>
-      <section style={styles.hero}>
+      <section className="hero">
         <div>
           <p style={styles.kicker}>{t("home.kicker", lang)}</p>
           <h1 style={styles.title}>{collection.name}</h1>
@@ -220,16 +213,18 @@ export default function HomeClient({ lang }) {
             <strong>{t("home.source", lang)}</strong> {collection.source}
           </p>
         </div>
-        <div style={styles.arch}>
-          {featured && (
-            <Image
-              src={featured.image}
-              alt={featured.title}
-              fill
-              sizes="(min-width: 768px) 40vw, 92vw"
-              style={{ objectFit: "cover" }}
-            />
-          )}
+        <div className="hero-media">
+          <div style={styles.arch}>
+            {featured && (
+              <Image
+                src={featured.image}
+                alt={featured.title}
+                fill
+                sizes="(min-width: 768px) 40vw, 92vw"
+                style={{ objectFit: "cover" }}
+              />
+            )}
+          </div>
         </div>
       </section>
 
