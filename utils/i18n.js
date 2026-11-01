@@ -15,6 +15,9 @@ export const strings = {
       logout: "Log out",
       myEntries: "My entries",
     },
+    common: {
+      retry: "Try again",
+    },
     home: {
       kicker: "KHMER LIVING ARCHIVE",
       curatedBy: "CURATED BY",
@@ -24,6 +27,7 @@ export const strings = {
       count: "showing {shown} of {total} entries",
       loading: "Loading the archive…",
       error: "The archive is unreachable right now — try again in a moment.",
+      emptyInvite: "No entries in the archive yet — be the first to contribute.",
       emptySearch:
         "Nothing carved from that search yet — try a shorter word, or clear the box to see everything.",
       footer:
@@ -37,6 +41,7 @@ export const strings = {
       countOne: "{n} entry",
       empty: "You have not added anything yet.",
       contributeLink: "Contribute",
+      error: "Your entries could not be loaded. Check your connection and try again.",
       status: {
         pending: "Waiting for review",
         published: "Published",
@@ -126,6 +131,9 @@ export const strings = {
       logout: "ចាកចេញ",
       myEntries: "ធាតុរបស់ខ្ញុំ",
     },
+    common: {
+      retry: "ព្យាយាមម្តងទៀត",
+    },
     home: {
       kicker: "KHMER LIVING ARCHIVE",
       curatedBy: "ថែរក្សាដោយ",
@@ -135,6 +143,7 @@ export const strings = {
       count: "បង្ហាញ {shown} ក្នុងចំណោម {total} ធាតុ",
       loading: "កំពុងផ្ទុកប័ណ្ណសារ…",
       error: "",
+      emptyInvite: "",
       emptySearch: "",
       footer: "",
     },
@@ -146,6 +155,7 @@ export const strings = {
       countOne: "{n} ធាតុ",
       empty: "អ្នកមិនទាន់បានបន្ថែមអ្វីនៅឡើយទេ។",
       contributeLink: "ចូលរួមចំណែក",
+      error: "",
       status: {
         pending: "កំពុងរង់ចាំការត្រួតពិនិត្យ",
         published: "បានផ្សព្វផ្សាយ",

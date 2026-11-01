@@ -70,11 +70,25 @@ export default async function MyEntriesPage() {
     );
   }
 
-  const { data: entries } = await supabase
+  const { data: entries, error } = await supabase
     .from("entries")
     .select("*")
     .eq("owner", user.id)
     .order("created_at", { ascending: false });
+
+  // An error must never render as "no entries": check error before empty.
+  if (error) {
+    return (
+      <main style={authStyles.wrap}>
+        <p style={authStyles.kicker}>{t("home.kicker", lang)}</p>
+        <h1 style={authStyles.title}>{t("my.title", lang)}</h1>
+        <p style={authStyles.notice}>{t("my.error", lang)}</p>
+        <a href="/my-entries" style={authStyles.link}>
+          {t("common.retry", lang)}
+        </a>
+      </main>
+    );
+  }
 
   const myEntries = entries ?? [];
 

@@ -112,6 +112,28 @@ const styles = {
     border: "1px dashed var(--line)",
     color: "var(--mute)",
   },
+  skeletonThumb: {
+    aspectRatio: "1 / 1",
+    borderRadius: "var(--radius)",
+  },
+  skeletonText: {
+    height: 16,
+    marginTop: 12,
+    borderRadius: "var(--radius)",
+  },
+  skeletonSmall: {
+    height: 12,
+    width: "60%",
+    marginTop: 8,
+    borderRadius: "var(--radius)",
+  },
+  retryLink: {
+    display: "inline-block",
+    marginTop: 12,
+    color: "var(--moss)",
+    fontSize: "var(--text-sm)",
+    fontWeight: 600,
+  },
   footer: {
     marginTop: 64,
     paddingTop: 24,
@@ -220,9 +242,20 @@ export default function HomeClient({ lang }) {
       />
 
       {status === "loading" ? (
-        <p style={styles.count}>{t("home.loading", lang)}</p>
+        <div style={styles.grid}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} aria-hidden>
+              <div className="skeleton" style={styles.skeletonThumb} />
+              <div className="skeleton" style={styles.skeletonText} />
+              <div className="skeleton" style={styles.skeletonSmall} />
+            </div>
+          ))}
+        </div>
       ) : status === "error" ? (
-        <p style={styles.error}>{t("home.error", lang)}</p>
+        <div style={styles.empty}>
+          <p style={styles.error}>{t("home.error", lang)}</p>
+          <a href="/" style={styles.retryLink}>{t("common.retry", lang)}</a>
+        </div>
       ) : (
         <>
           <p style={styles.count}>
@@ -253,7 +286,14 @@ export default function HomeClient({ lang }) {
             })}
           </div>
 
-          {visibleEntries.length === 0 ? (
+          {entries.length === 0 ? (
+            <div style={styles.empty}>
+              <p>{t("home.emptyInvite", lang)}</p>
+              <a href="/contribute" style={styles.retryLink}>
+                {t("my.contributeLink", lang)}
+              </a>
+            </div>
+          ) : visibleEntries.length === 0 ? (
             <div style={styles.empty}>{t("home.emptySearch", lang)}</div>
           ) : (
             <div style={styles.grid}>
