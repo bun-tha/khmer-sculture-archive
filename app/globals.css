@@ -16,6 +16,7 @@
   --moss-ink: #ffffff;
   --stone-a: #c9c4b4;
   --stone-b: #8d8a7c;
+  --danger: #a63d31;
 
   /* Fonts (next/font variables, defined on <html> in app/layout.js) */
   --font-serif: var(--font-newsreader, "Newsreader"),
@@ -56,6 +57,7 @@
     --moss-ink: #16201a;
     --stone-a: #9a9686;
     --stone-b: #55544b;
+    --danger: #e08a7d;
   }
 }
 */
@@ -71,6 +73,7 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-body);
+  overflow-wrap: anywhere;
 }
 
 h1, h2, h3 {
@@ -160,7 +163,7 @@ a {
   justify-content: space-between;
   gap: 12px 16px;
   padding: 18px 24px;
-  border-bottom: 1px solid #DDDDDA;
+  border-bottom: 1px solid var(--line);
 }
 .site-header-right {
   display: flex;

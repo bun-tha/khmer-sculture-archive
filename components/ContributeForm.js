@@ -15,8 +15,8 @@ const formStyles = {
   form: {
     marginTop: 32,
     padding: 24,
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 10,
   },
   textarea: {
@@ -25,25 +25,25 @@ const formStyles = {
     padding: "12px 16px",
     fontSize: 16,
     fontFamily: "inherit",
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 8,
-    color: "#242426",
+    color: "var(--ink)",
     resize: "vertical",
   },
   fieldError: {
     fontSize: 13,
-    color: "#B4473A",
+    color: "var(--danger)",
     margin: "6px 0 0",
   },
   formError: {
     fontSize: 14,
-    color: "#B4473A",
+    color: "var(--danger)",
     margin: 0,
   },
   photoHint: {
     fontSize: 13,
-    color: "#6B6B68",
+    color: "var(--mute)",
     margin: "6px 0 0",
   },
   disabled: {
@@ -53,13 +53,13 @@ const formStyles = {
   success: {
     marginTop: 32,
     padding: 24,
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 10,
   },
   successText: {
     fontSize: 16,
-    color: "#242426",
+    color: "var(--ink)",
     lineHeight: 1.6,
     margin: 0,
   },
@@ -67,7 +67,7 @@ const formStyles = {
     display: "inline-block",
     marginTop: 16,
     fontSize: 14,
-    color: "#5B7CAD",
+    color: "var(--moss)",
   },
 };
 

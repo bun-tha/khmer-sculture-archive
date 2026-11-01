@@ -1,6 +1,5 @@
 // Shared inline styles for the auth pages (/login, /signup).
-// Colors and shapes mirror app/page.js so the site feels like one piece:
-// light #FAFAF9 background, white cards, #DDDDDA borders, #5B7CAD accent.
+// All colors are design tokens from app/globals.css.
 const authStyles = {
   wrap: {
     maxWidth: 720,
@@ -9,7 +8,7 @@ const authStyles = {
   },
   kicker: {
     fontFamily: "'Courier New', monospace",
-    color: "#5B7CAD",
+    color: "var(--moss)",
     fontSize: 14,
     letterSpacing: 1,
   },
@@ -21,21 +20,21 @@ const authStyles = {
   },
   description: {
     fontSize: 18,
-    color: "#6B6B68",
+    color: "var(--mute)",
     lineHeight: 1.6,
     margin: 0,
   },
   card: {
     marginTop: 48,
     padding: 24,
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 10,
   },
   cardLabel: {
     fontFamily: "'Courier New', monospace",
     fontSize: 12,
-    color: "#5B7CAD",
+    color: "var(--moss)",
     margin: "20px 0 0",
   },
   input: {
@@ -43,10 +42,10 @@ const authStyles = {
     marginTop: 2,
     padding: "12px 16px",
     fontSize: 16,
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 8,
-    color: "#242426",
+    color: "var(--ink)",
   },
   button: {
     width: "100%",
@@ -54,24 +53,24 @@ const authStyles = {
     padding: "14px 16px",
     fontSize: 16,
     fontWeight: 600,
-    color: "#FFFFFF",
-    backgroundColor: "#5B7CAD",
+    color: "var(--moss-ink)",
+    backgroundColor: "var(--moss)",
     border: "none",
     borderRadius: 8,
     cursor: "pointer",
   },
   notice: {
     fontSize: 15,
-    color: "#6B6B68",
+    color: "var(--mute)",
     margin: "24px 0 0",
   },
   footer: {
     marginTop: 48,
     fontSize: 14,
-    color: "#242426",
+    color: "var(--ink)",
   },
   link: {
-    color: "#5B7CAD",
+    color: "var(--moss)",
   },
 };
 

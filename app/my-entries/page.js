@@ -7,20 +7,20 @@ const styles = {
   row: {
     marginTop: 16,
     padding: "16px 20px",
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 10,
   },
   title: {
     fontFamily: "Georgia, 'Iowan Old Style', serif",
     fontSize: 20,
     fontWeight: 600,
-    color: "#242426",
+    color: "var(--ink)",
     textDecoration: "none",
   },
   titleKhmer: {
     fontSize: 16,
-    color: "#4A4A46",
+    color: "var(--mute)",
     margin: "4px 0 8px",
   },
   rowFooter: {
@@ -30,12 +30,12 @@ const styles = {
   },
   status: {
     fontSize: 13,
-    color: "#5B7CAD",
+    color: "var(--moss)",
     margin: 0,
   },
   editLink: {
     fontSize: 13,
-    color: "#5B7CAD",
+    color: "var(--moss)",
     textDecoration: "none",
   },
 };

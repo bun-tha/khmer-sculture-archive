@@ -8,7 +8,7 @@ import LanguageToggle from "./LanguageToggle.js";
 const styles = {
   brand: {
     fontFamily: "'Courier New', monospace",
-    color: "#5B7CAD",
+    color: "var(--moss)",
     fontSize: 14,
     letterSpacing: 1,
     textDecoration: "none",
@@ -21,7 +21,7 @@ const styles = {
     whiteSpace: "nowrap",
     verticalAlign: "middle",
     fontSize: 14,
-    color: "#6B6B68",
+    color: "var(--mute)",
   },
   link: {
     display: "inline-flex",
@@ -29,16 +29,16 @@ const styles = {
     minHeight: 44,
     padding: "0 4px",
     fontSize: 14,
-    color: "#5B7CAD",
+    color: "var(--moss)",
     textDecoration: "none",
   },
   logoutButton: {
     display: "inline-flex",
     alignItems: "center",
     minHeight: 44,
-    color: "#242426",
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #DDDDDA",
+    color: "var(--ink)",
+    backgroundColor: "var(--surf)",
+    border: "1px solid var(--line)",
     borderRadius: 8,
     padding: "6px 12px",
     fontSize: 14,

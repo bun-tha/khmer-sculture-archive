@@ -3,7 +3,7 @@ import { t } from "../utils/i18n.js";
 const styles = {
   card: {
     padding: "14px 0",
-    borderBottom: "0.5px solid #DDDDDA",
+    borderBottom: "0.5px solid var(--line)",
   },
   row: {
     display: "flex",
@@ -12,7 +12,7 @@ const styles = {
   number: {
     fontFamily: "Georgia, 'Iowan Old Style', serif",
     fontSize: 13,
-    color: "#5B7CAD",
+    color: "var(--moss)",
     minWidth: 20,
   },
   imageWrap: {
@@ -33,33 +33,33 @@ const styles = {
     fontSize: 22,
     fontWeight: 600,
     letterSpacing: "-0.01em",
-    color: "#242426",
+    color: "var(--ink)",
     margin: "0 0 4px",
   },
   titleLink: {
-    color: "#242426",
+    color: "var(--ink)",
     textDecoration: "none",
   },
   titleKhmer: {
     fontFamily: "Georgia, 'Iowan Old Style', serif",
     fontSize: 20,
-    color: "#4A4A46",
+    color: "var(--mute)",
     margin: "0 0 8px",
   },
   description: {
     fontSize: 14,
-    color: "#4A4A46",
+    color: "var(--mute)",
     lineHeight: 1.6,
     margin: "0 0 8px",
   },
   meta: {
     fontSize: 12,
-    color: "#7C8894",
+    color: "var(--mute)",
     margin: 0,
   },
   credit: {
     fontSize: 12,
-    color: "#7C8894",
+    color: "var(--mute)",
     fontStyle: "italic",
     margin: "8px 0 0",
   },
