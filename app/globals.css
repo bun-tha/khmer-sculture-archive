@@ -10,9 +10,9 @@
   --bg: #e6e7e1;
   --surf: #d9dbd3;
   --ink: #23272a;
-  --mute: #5b6260;
+  --mute: #545b59;
   --line: #b9bdb3;
-  --moss: #4f6b45;
+  --moss: #47603d;
   --moss-ink: #ffffff;
   --stone-a: #c9c4b4;
   --stone-b: #8d8a7c;
@@ -44,7 +44,6 @@
   --control-min-height: 44px;
 }
 
-/* Re-enable once components use var(--token) colors.
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
@@ -60,7 +59,6 @@
     --danger: #e08a7d;
   }
 }
-*/
 
 * {
   box-sizing: border-box;
