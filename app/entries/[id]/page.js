@@ -192,11 +192,6 @@ export default async function EntryPage({ params }) {
         <div>
           <h1 style={styles.title}>{entry.title}</h1>
           {entry.title_km && <p style={styles.titleKm}>{entry.title_km}</p>}
-          {entry.contributor_name && (
-            <p style={styles.credit}>
-              {t("entry.contributedBy", lang, { name: entry.contributor_name })}
-            </p>
-          )}
           <dl style={styles.metaList}>
             {meta.map((row) => (
               <div key={row.label}>
