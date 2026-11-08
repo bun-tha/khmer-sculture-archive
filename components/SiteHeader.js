@@ -55,6 +55,9 @@ export default async function SiteHeader() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Show the review link only to reviewers; the page also gates itself.
+  const { data: isReviewer } = await supabase.rpc("is_reviewer");
+
   return (
     <header className="site-header">
       <a href="/" style={styles.brand}>
@@ -67,6 +70,11 @@ export default async function SiteHeader() {
             <a href="/my-entries" style={styles.link}>
               {t("nav.myEntries", lang)}
             </a>
+            {isReviewer === true && (
+              <a href="/review" style={styles.link}>
+                {t("nav.review", lang)}
+              </a>
+            )}
             <form action={logout} style={{ margin: 0 }}>
               <button type="submit" style={styles.logoutButton}>
                 {t("nav.logout", lang)}

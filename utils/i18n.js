@@ -14,6 +14,7 @@ export const strings = {
       signup: "Sign up",
       logout: "Log out",
       myEntries: "My entries",
+      review: "Review",
     },
     common: {
       retry: "Try again",
@@ -47,6 +48,15 @@ export const strings = {
         published: "Published",
         returned: "Returned for changes",
       },
+    },
+    review: {
+      title: "Review queue",
+      notReviewer: "Only reviewers can open the review queue.",
+      empty: "Nothing is waiting for review — the queue is clean.",
+      error: "The queue could not be loaded. Check your connection and try again.",
+      fail: "That decision didn't save. It may already have been reviewed, or you may no longer be a reviewer.",
+      publish: "Publish",
+      return: "Return",
     },
     field: {
       email: "Email",
@@ -136,6 +146,7 @@ export const strings = {
       signup: "ចុះឈ្មោះ",
       logout: "ចាកចេញ",
       myEntries: "ធាតុរបស់ខ្ញុំ",
+      review: "ការពិនិត្យ",
     },
     common: {
       retry: "ព្យាយាមម្តងទៀត",
@@ -167,6 +178,15 @@ export const strings = {
         published: "បានផ្សព្វផ្សាយ",
         returned: "ត្រឡប់មកវិញដើម្បីកែសម្រួល",
       },
+    },
+    review: {
+      title: "ជួរត្រួតពិនិត្យ",
+      notReviewer: "",
+      empty: "",
+      error: "",
+      fail: "",
+      publish: "ផ្សាយ",
+      return: "បង្វិលត្រឡប់",
     },
     field: {
       email: "អ៊ីមែល",
