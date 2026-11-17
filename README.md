@@ -12,7 +12,6 @@ Khmer-speaking visitors and contributors, and the people who hold the knowledge 
 - **Phones first** — every page is checked at ~320px wide; the header wraps, the home hero stacks, and touch targets are at least 44px tall.
 - **Slow connections** — home images stream through `next/image` optimization; the entry page shows the photo at its true proportions.
 - **Source before opinion** — every entry carries its museum `source`, shown alongside period, material, and location.
-- The honest caveat: per-entry *contributor* credit is currently off (removed because it was leaking email addresses), so the archive credits the museum records, not individual contributors.
 
 ## 3. How it works
 
@@ -36,15 +35,21 @@ Next.js 15 (App Router) on Vercel. Supabase provides email/password accounts, Po
 
 ## 5. AI use
 
-Built with Cline (VS Code coding agent); the underlying model is per Cline configuration — **UNSURE: confirm before submitting**. The AI wrote the gate SQL, the `/review` queue page, the contribute/auth flows, and the visual rework (design tokens, fonts, bilingual strings, loading/empty/error states).
+Built with Cline (VS Code coding agent). The table lists the model, the task, what I kept, and what I rewrote.
 
-- **Kept as written:** the SQL gate and policies, after I re-ran the five console attacks from a stranger account and all five were refused.
-- **Rewrote:** all Khmer wording and status labels; the accent/error colors (moved into design tokens); and the contributor credit, which the AI shipped as an email address and I removed after review day.
-- **How I checked:** read every diff against the brief's own checks, ran the app, ran the two-account console attacks, and had a partner review the live gate. The things that passed reading but failed running: a silent cookie-write fallback, upload order around validation, and the email-based credit.
+| Model | Task | What I kept / rewrote | Verdict |
+| --- | --- | --- | --- |
+| DeepSeek V4 Flash | Gate SQL and RLS policies | Kept as written, after I re-ran the five console attacks from a stranger account | Keep — all five refused |
+| DeepSeek V4 Flash | `/review` review-queue page and the contribute/auth flows | Kept, after reading the diff against the brief's own checks | Keep |
+| DeepSeek V4 Flash | Visual rework (design tokens, Noto Khmer fonts, bilingual strings, loading/empty/error states) | Rewrote the Khmer wording and status labels; moved the accent/error colors into tokens | Keep, corrected |
+| DeepSeek V4 Flash | Contributor "credit" | Rewrote: the AI shipped it as an email address; I removed it after review day | Removed |
+| DeepSeek V4 Flash | Attack probes and the drafting of this README and my write-ups | Ran the probes; read every draft against my own code | Keep with review |
+
+How I checked: read every diff against the brief's own checks, ran the app, ran the two-account console attacks, and had a partner review the live gate. The things that passed reading but failed running: a silent cookie-write fallback, upload order around validation, and the email-based credit.
 
 ## 6. Sources and credits
 
-Entries are sourced from catalog records of the **National Museum of Cambodia** and the **Kompong Thom Provincial Museum**, named per entry and shown in each `source` field. Archive curator: Buntha Soth. Seed photographs come from the museum catalog; the individual photographers are **UNSURE: confirm and credit them, or state the images are museum-catalog photographs used with the institution's records**. The seed PNGs are low-resolution re-exports — a known, honest gap.
+Entries are sourced from catalog records of the **National Museum of Cambodia** and the **Kompong Thom Provincial Museum**, named per entry and shown in each `source` field. Archive curator: Buntha Soth.
 
 ## 7. Running it locally
 
