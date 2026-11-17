@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
-// Zoomable entry photo. Click (or Enter/Space on the focused button) toggles
-// between 1x and 2x. The transition is disabled for reduced-motion users. The
-// button carries an aria-label, so the zoom works from the keyboard.
+// Natural-aspect entry photo inside a focusable zoom button. It keeps the
+// photo's own proportions (width 100%, height auto) instead of cropping it
+// into a fixed box. Click (or Enter/Space on the focused button) toggles
+// ~2x zoom; the transition is off for reduced-motion users.
 export default function EntryImage({ src, alt, zoomInLabel, zoomOutLabel }) {
   const [zoomed, setZoomed] = useState(false);
   const [reduced, setReduced] = useState(false);
@@ -32,7 +32,6 @@ export default function EntryImage({ src, alt, zoomInLabel, zoomOutLabel }) {
         display: "block",
         position: "relative",
         width: "100%",
-        aspectRatio: "4 / 5",
         overflow: "hidden",
         padding: 0,
         margin: 0,
@@ -44,19 +43,18 @@ export default function EntryImage({ src, alt, zoomInLabel, zoomOutLabel }) {
     >
       <div
         style={{
-          position: "absolute",
-          inset: 0,
+          width: "100%",
+          lineHeight: 0,
           transform: zoomed ? "scale(2)" : "scale(1)",
           transformOrigin: "center center",
           transition: reduced ? "none" : "transform 0.25s ease-in-out",
         }}
       >
-        <Image
+        {/* Height auto + width 100% keeps the photo's true aspect ratio. */}
+        <img
           src={src}
           alt={alt}
-          fill
-          sizes="(min-width: 880px) 40vw, 92vw"
-          style={{ objectFit: "cover" }}
+          style={{ display: "block", width: "100%", height: "auto" }}
         />
       </div>
     </button>
