@@ -35,10 +35,14 @@ Next.js 15 (App Router) on Vercel. Supabase provides email/password accounts, Po
 
 ## 5. AI use
 
-Built with Cline (VS Code coding agent). The table lists the model, the task, what I kept, and what I rewrote.
+Built with Cline, the VS Code coding agent (running DeepSeek V4 Flash), alongside a separate Claude chat I consulted — mostly for schema, validation, and planning decisions while Cline was busy running commands. The table lists the model, the task, what I kept, and what I rewrote.
 
 | Model | Task | What I kept / rewrote | Verdict |
 | --- | --- | --- | --- |
+| Claude | entries schema and columns | Kept; added a Khmer-title check after 2 of 10 entries had none | Keep, corrected |
+| Claude | Lab 7 validation rules (lengths, photo type and size) | Kept the draft rules as written | Keep |
+| Claude | Week 7 post: title_km must contain Khmer characters | My own choice of rule | Keep, my own rule |
+| Claude | Lab 10 gate plan (status, reviewers, review_entry, /my-entries) | Used as the plan I built the gate from | Keep |
 | DeepSeek V4 Flash | Gate SQL and RLS policies | Kept as written, after I re-ran the five console attacks from a stranger account | Keep — all five refused |
 | DeepSeek V4 Flash | `/review` review-queue page and the contribute/auth flows | Kept, after reading the diff against the brief's own checks | Keep |
 | DeepSeek V4 Flash | Visual rework (design tokens, Noto Khmer fonts, bilingual strings, loading/empty/error states) | Rewrote the Khmer wording and status labels; moved the accent/error colors into tokens | Keep, corrected |
