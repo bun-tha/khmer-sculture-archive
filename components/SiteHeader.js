@@ -67,6 +67,9 @@ export default async function SiteHeader() {
         {user ? (
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={styles.email}>{user.email}</span>
+            <a href="/contribute" style={styles.link}>
+              {t("nav.contribute", lang)}
+            </a>
             <a href="/my-entries" style={styles.link}>
               {t("nav.myEntries", lang)}
             </a>

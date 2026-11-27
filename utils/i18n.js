@@ -14,6 +14,7 @@ export const strings = {
       signup: "Sign up",
       logout: "Log out",
       myEntries: "My entries",
+      contribute: "Contribute",
       review: "Review",
     },
     common: {
@@ -146,6 +147,7 @@ export const strings = {
       signup: "ចុះឈ្មោះ",
       logout: "ចាកចេញ",
       myEntries: "ធាតុរបស់ខ្ញុំ",
+      contribute: "ចូលរួមចំណែក",
       review: "ការពិនិត្យ",
     },
     common: {
