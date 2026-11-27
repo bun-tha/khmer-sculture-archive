@@ -127,10 +127,6 @@ export async function submitEntry(prevState, formData) {
       material: values.material,
       period: values.period,
       owner: user.id,
-      // Credit for the entry, captured from the session at write time:
-      // auth.users emails are not readable by the anon key, so this is the
-      // only way visitors can see who contributed. Never comes from the form.
-      contributor_name: user.email || null,
       photo_url: uploaded.photoUrl,
     })
     .select("id")

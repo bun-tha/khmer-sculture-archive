@@ -17,7 +17,7 @@ Khmer-speaking visitors and contributors, and the people who hold the knowledge 
 
 Next.js 15 (App Router) on Vercel. Supabase provides email/password accounts, Postgres, and the `photos` storage bucket. (The source of truth for the SQL is the Supabase dashboard — there are **no `.sql` files in this repo**.)
 
-- **Tables:** `entries` (id, created_at, title, title_km, description, location, source, material, period, photo_url, owner → auth.users, status, contributor_name) and `reviewers` (user_id → auth.users).
+- **Tables:** `entries` (id, created_at, title, title_km, description, location, source, material, period, photo_url, owner → auth.users, status) and `reviewers` (user_id → auth.users).
 - **Statuses:** `pending` → `published` | `returned`.
 - **Database functions:** `is_reviewer()` and `review_entry(entry_id, decision)`.
 - **Row Level Security:**
